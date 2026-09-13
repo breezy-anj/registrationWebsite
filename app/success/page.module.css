@@ -33,3 +33,36 @@
   max-width: 500px;
   margin-bottom: 3rem;
 }
+
+.detailsCard {
+  width: 100%;
+  max-width: 500px;
+  padding: 2rem;
+  border-radius: 1rem;
+  margin-bottom: 2rem;
+  text-align: left;
+}
+
+.detailsTitle {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  color: var(--primary);
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 0.5rem;
+}
+
+.detailsList {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.detailsList li {
+  color: #d4d4d8;
+}
+
+.detailsList strong {
+  color: var(--foreground);
+}
