@@ -1,0 +1,34 @@
+.container {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem 2rem;
+  background: radial-gradient(circle at bottom, rgba(16, 185, 129, 0.1) 0%, rgba(9, 9, 11, 1) 40%);
+}
+
+.formWrapper {
+  width: 100%;
+  max-width: 500px;
+  padding: 2.5rem;
+  border-radius: 1rem;
+}
+
+.title {
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+  text-align: center;
+}
+
+.subtitle {
+  color: #a1a1aa;
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.submitBtn {
+  width: 100%;
+  margin-top: 1rem;
+}

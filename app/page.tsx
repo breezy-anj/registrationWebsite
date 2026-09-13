@@ -1,69 +1,61 @@
-import Image from "next/image";
-import styles from "./page.module.css";
+import Link from 'next/link';
+import styles from './page.module.css';
 
 export default function Home() {
   return (
-    <div className={styles.page}>
-      <main className={styles.main}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className={styles.intro}>
-          <h1>
-            To get started, edit the{" "}
-            <code className={styles.code}>page.tsx</code> file.
-          </h1>
-          <p>
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Learning
-            </a>{" "}
-            center.
+    <main className={styles.container}>
+      <div className={`${styles.hero} animate-fade-in`}>
+        <h1 className={styles.title}>
+          <span className="gradient-text">How to Hackathon !!</span>
+        </h1>
+        <p className={styles.description}>
+          Unite with creative thinkers and aspiring technologists. Learn the dynamics of tech competitions, networking, and modern trends.
+        </p>
+        <Link href="/register" className="btn btn-primary">
+          Register Now
+        </Link>
+      </div>
+
+      <div className={styles.grid}>
+        <div className={`${styles.card} glass animate-fade-in`} style={{ animationDelay: '0.1s' }}>
+          <h2 className={styles.cardTitle}>About the Event</h2>
+          <p className={styles.cardText}>
+            Inspired by the comprehensive vision of larger events, this session aims to introduce participants to hackathons. From ideation to execution, we've got you covered.
           </p>
         </div>
-        <div className={styles.ctas}>
-          <a
-            className={styles.primary}
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className={styles.logo}
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={14}
-            />
-            Deploy Now
-          </a>
-          <a
-            className={styles.secondary}
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+
+        <div className={`${styles.card} glass animate-fade-in`} style={{ animationDelay: '0.2s' }}>
+          <h2 className={styles.cardTitle}>Event Flow</h2>
+          <ul className={styles.flowList}>
+            <li className={styles.flowItem}>
+              <span className={styles.flowTime}>~30 mins: Introduction</span>
+              <span className={styles.flowDesc}>President's address & event preview</span>
+            </li>
+            <li className={styles.flowItem}>
+              <span className={styles.flowTime}>Main Session</span>
+              <span className={styles.flowDesc}>Insights on hackathons, tech trends, and networking</span>
+            </li>
+            <li className={styles.flowItem}>
+              <span className={styles.flowTime}>1 hour: Mini Idea Challenge</span>
+              <span className={styles.flowDesc}>Mentored ideation for software solutions</span>
+            </li>
+            <li className={styles.flowItem}>
+              <span className={styles.flowTime}>~30 mins: Judging & Conclusion</span>
+              <span className={styles.flowDesc}>Result declaration & future event promotion</span>
+            </li>
+          </ul>
         </div>
-      </main>
-    </div>
+        
+        <div className={`${styles.card} glass animate-fade-in`} style={{ animationDelay: '0.3s' }}>
+          <h2 className={styles.cardTitle}>Details</h2>
+          <p className={styles.cardText}>
+            <strong>Team Size:</strong> 1 to 3 members<br/>
+            <strong>Pre-requisites:</strong> None<br/>
+            <strong>Tools:</strong> AI tools are encouraged!<br/>
+            <strong>Prizes:</strong> Goodies for the best ideas.
+          </p>
+        </div>
+      </div>
+    </main>
   );
 }
