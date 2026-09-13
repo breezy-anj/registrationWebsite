@@ -6,54 +6,94 @@ import { appendToSheet } from '@/lib/sheets';
 import { redirect } from 'next/navigation';
 
 const phoneRegex = /^[0-9]{10}$/;
-const phoneError = 'Must be exactly 10 digits with no special characters';
+const phoneError = 'Must be exactly 10 digits';
 
-const schema = z.object({
-  name: z.string().min(2, 'Leader Name is required'),
-  team_name: z.string().min(1, 'Team name is required'),
-  phone_number: z.string().regex(phoneRegex, phoneError),
-  college_year: z.string().min(1, 'College year is required'),
+const memberSchema = z.object({
+  name: z.string().min(2, 'Name is required'),
+  email: z.string().email('Invalid email'),
+  phone: z.string().regex(phoneRegex, phoneError),
+  roll: z.string().min(1, 'Roll number is required'),
+  institution: z.string().min(1, 'Institution is required'),
+  year: z.string().min(1, 'Year is required'),
   branch: z.string().min(1, 'Branch is required'),
-  member2_name: z.string().optional(),
-  member2_phone: z.string().regex(phoneRegex, phoneError).optional().or(z.literal('')),
-  member3_name: z.string().optional(),
-  member3_phone: z.string().regex(phoneRegex, phoneError).optional().or(z.literal('')),
+});
+
+const formSchema = z.object({
+  team_name: z.string().min(1, 'Team name is required'),
+  members: z.array(memberSchema).min(1).max(3),
 });
 
 export async function registerAction(prevState: any, formData: FormData) {
-  const data = {
-    name: formData.get('name') as string,
-    team_name: formData.get('team_name') as string,
-    phone_number: formData.get('phone_number') as string,
-    college_year: formData.get('college_year') as string,
-    branch: formData.get('branch') as string,
-    member2_name: formData.get('member2_name') as string | undefined,
-    member2_phone: formData.get('member2_phone') as string | undefined,
-    member3_name: formData.get('member3_name') as string | undefined,
-    member3_phone: formData.get('member3_phone') as string | undefined,
-  };
+  const memberCountStr = formData.get('member_count') as string;
+  const count = parseInt(memberCountStr, 10) || 1;
+  const team_name = formData.get('team_name') as string;
 
-  const parsed = schema.safeParse(data);
+  const members = [];
+  for (let i = 0; i < count; i++) {
+    members.push({
+      name: formData.get(`m${i}_name`) as string,
+      email: formData.get(`m${i}_email`) as string,
+      phone: formData.get(`m${i}_phone`) as string,
+      roll: formData.get(`m${i}_roll`) as string,
+      institution: formData.get(`m${i}_institution`) as string,
+      year: formData.get(`m${i}_year`) as string,
+      branch: formData.get(`m${i}_branch`) as string,
+    });
+  }
+
+  const parsed = formSchema.safeParse({ team_name, members });
 
   if (!parsed.success) {
     return {
       errors: parsed.error.flatten().fieldErrors,
-      message: 'Missing Fields. Failed to Register.',
+      message: 'Validation failed. Please check all fields.',
     };
   }
 
-  const { name, team_name, phone_number, college_year, branch, member2_name, member2_phone, member3_name, member3_phone } = parsed.data;
+  const validData = parsed.data;
+
+  // 1. Check for duplicates within the current form submission
+  const submittedEmails = validData.members.map(m => m.email.toLowerCase());
+  const uniqueEmails = new Set(submittedEmails);
+  if (uniqueEmails.size !== submittedEmails.length) {
+    return { message: 'Duplicate emails found within the team submission.' };
+  }
 
   try {
-    // 1. Insert into DB
-    await sql`
-      INSERT INTO registrations (name, team_name, phone_number, college_year, branch, member2_name, member2_phone, member3_name, member3_phone)
-      VALUES (${name}, ${team_name}, ${phone_number}, ${college_year}, ${branch}, ${member2_name || null}, ${member2_phone || null}, ${member3_name || null}, ${member3_phone || null})
+    // 2. Check for duplicate emails in the database
+    const existingUsers = await sql`
+      SELECT email FROM participants WHERE email = ANY(${submittedEmails})
     `;
+    
+    if (existingUsers.length > 0) {
+      const dups = existingUsers.map(u => u.email).join(', ');
+      return { message: `Email already registered: ${dups}` };
+    }
 
-    // 2. Append to Sheet
-    const dateStr = new Date().toLocaleString();
-    await appendToSheet([name, team_name, phone_number, college_year, branch, member2_name || '', member2_phone || '', member3_name || '', member3_phone || '', dateStr]);
+    // 3. Insert into Database
+    for (let i = 0; i < validData.members.length; i++) {
+      const m = validData.members[i];
+      const isLeader = i === 0;
+      await sql`
+        INSERT INTO participants (team_name, is_leader, name, email, phone_number, roll_number, institution, college_year, branch)
+        VALUES (${validData.team_name}, ${isLeader}, ${m.name}, ${m.email.toLowerCase()}, ${m.phone}, ${m.roll}, ${m.institution}, ${m.year}, ${m.branch})
+      `;
+      
+      // 4. Append to Google Sheets (One row per participant)
+      const dateStr = new Date().toLocaleString();
+      await appendToSheet([
+        validData.team_name,
+        isLeader ? 'Leader' : `Member ${i + 1}`,
+        m.name,
+        m.email,
+        m.phone,
+        m.roll,
+        m.institution,
+        m.year,
+        m.branch,
+        dateStr
+      ]);
+    }
     
   } catch (error) {
     console.error('Database Error:', error);
@@ -62,15 +102,10 @@ export async function registerAction(prevState: any, formData: FormData) {
     };
   }
 
-  // Redirect on success with query params
+  // Redirect on success
   const query = new URLSearchParams({
-    team: team_name,
-    m1: name,
-    m2: member2_name || '',
-    m3: member3_name || '',
-    p1: phone_number,
-    p2: member2_phone || '',
-    p3: member3_phone || '',
+    team: validData.team_name,
+    count: validData.members.length.toString(),
   });
   
   redirect(`/success?${query.toString()}`);

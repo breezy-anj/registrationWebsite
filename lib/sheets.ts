@@ -20,7 +20,7 @@ export async function appendToSheet(data: any[]) {
   try {
     await sheets.spreadsheets.values.append({
       spreadsheetId,
-      range: 'Sheet1!A:F', // Adjust if sheet name is different
+      range: 'Sheet1', // Dynamically accepts any number of columns
       valueInputOption: 'USER_ENTERED',
       requestBody: {
         values: [data],

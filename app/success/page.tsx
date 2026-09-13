@@ -8,12 +8,7 @@ export default async function Success({
 }) {
   const resolvedParams = await searchParams;
   const team = resolvedParams.team as string;
-  const m1 = resolvedParams.m1 as string;
-  const m2 = resolvedParams.m2 as string;
-  const m3 = resolvedParams.m3 as string;
-  const p1 = resolvedParams.p1 as string;
-  const p2 = resolvedParams.p2 as string;
-  const p3 = resolvedParams.p3 as string;
+  const count = resolvedParams.count as string;
 
   return (
     <main className={styles.container}>
@@ -29,13 +24,12 @@ export default async function Success({
         Thank you for registering for the "How to Hackathon !!" event. We've successfully saved your details.
       </p>
 
-      {(team || m1) && (
+      {team && (
         <div className={`${styles.detailsCard} glass animate-fade-in`} style={{ animationDelay: '0.3s' }}>
-          <h2 className={styles.detailsTitle}>Team: {team || 'Individual Registration'}</h2>
+          <h2 className={styles.detailsTitle}>Team: {team}</h2>
           <ul className={styles.detailsList}>
-            {m1 && <li><strong>Leader:</strong> {m1} ({p1})</li>}
-            {m2 && <li><strong>Member 2:</strong> {m2} ({p2})</li>}
-            {m3 && <li><strong>Member 3:</strong> {m3} ({p3})</li>}
+            <li><strong>Members Registered:</strong> {count || 1}</li>
+            <li>Your information has been successfully secured.</li>
           </ul>
         </div>
       )}
