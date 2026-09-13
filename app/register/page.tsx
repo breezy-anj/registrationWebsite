@@ -45,7 +45,7 @@ export default function Register() {
 
           <div className="input-group">
             <label htmlFor="phone_number" className="input-label">Leader Phone Number</label>
-            <input type="tel" id="phone_number" name="phone_number" className="input-field" placeholder="1234567890" required />
+            <input type="tel" id="phone_number" name="phone_number" className="input-field" placeholder="1234567890" pattern="[0-9]{10}" maxLength={10} required />
             {state?.errors?.phone_number && <p className="error-text">{state.errors.phone_number[0]}</p>}
           </div>
 
@@ -82,7 +82,7 @@ export default function Register() {
               </div>
               <div className="input-group">
                 <label htmlFor="member2_phone" className="input-label">Member 2 Phone Number</label>
-                <input type="tel" id="member2_phone" name="member2_phone" className="input-field" placeholder="0987654321" required />
+                <input type="tel" id="member2_phone" name="member2_phone" className="input-field" placeholder="0987654321" pattern="[0-9]{10}" maxLength={10} required />
               </div>
             </>
           )}
@@ -95,7 +95,7 @@ export default function Register() {
               </div>
               <div className="input-group">
                 <label htmlFor="member3_phone" className="input-label">Member 3 Phone Number</label>
-                <input type="tel" id="member3_phone" name="member3_phone" className="input-field" placeholder="1122334455" required />
+                <input type="tel" id="member3_phone" name="member3_phone" className="input-field" placeholder="1122334455" pattern="[0-9]{10}" maxLength={10} required />
               </div>
             </>
           )}

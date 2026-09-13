@@ -5,16 +5,19 @@ import { sql } from '@/lib/db';
 import { appendToSheet } from '@/lib/sheets';
 import { redirect } from 'next/navigation';
 
+const phoneRegex = /^[0-9]{10}$/;
+const phoneError = 'Must be exactly 10 digits with no special characters';
+
 const schema = z.object({
   name: z.string().min(2, 'Leader Name is required'),
   team_name: z.string().min(1, 'Team name is required'),
-  phone_number: z.string().min(10, 'Valid phone number is required'),
+  phone_number: z.string().regex(phoneRegex, phoneError),
   college_year: z.string().min(1, 'College year is required'),
   branch: z.string().min(1, 'Branch is required'),
   member2_name: z.string().optional(),
-  member2_phone: z.string().optional(),
+  member2_phone: z.string().regex(phoneRegex, phoneError).optional().or(z.literal('')),
   member3_name: z.string().optional(),
-  member3_phone: z.string().optional(),
+  member3_phone: z.string().regex(phoneRegex, phoneError).optional().or(z.literal('')),
 });
 
 export async function registerAction(prevState: any, formData: FormData) {
