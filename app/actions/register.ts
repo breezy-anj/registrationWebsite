@@ -3,7 +3,7 @@
 import { z } from 'zod';
 import { sql } from '@/lib/db';
 import { appendToSheet } from '@/lib/sheets';
-import { redirect } from 'next/navigation';
+import crypto from 'crypto';
 
 const phoneRegex = /^[0-9]{10}$/;
 const phoneError = 'Must be exactly 10 digits';
@@ -23,7 +23,28 @@ const formSchema = z.object({
   members: z.array(memberSchema).min(1).max(3),
 });
 
-export async function registerAction(prevState: any, formData: FormData) {
+export type MemberData = {
+  name: string;
+  email: string;
+  branch: string;
+  is_leader: boolean;
+};
+
+export type RegistrationData = {
+  team_name: string;
+  members: MemberData[];
+};
+
+export type RegisterState = {
+  success?: boolean;
+  token?: string;
+  team_name?: string;
+  members?: MemberData[];
+  message?: string;
+  errors?: Record<string, string[]>;
+};
+
+export async function registerAction(prevState: any, formData: FormData): Promise<RegisterState> {
   const memberCountStr = formData.get('member_count') as string;
   const count = parseInt(memberCountStr, 10) || 1;
   const team_name = formData.get('team_name') as string;
@@ -45,6 +66,7 @@ export async function registerAction(prevState: any, formData: FormData) {
 
   if (!parsed.success) {
     return {
+      success: false,
       errors: parsed.error.flatten().fieldErrors,
       message: 'Validation failed. Please check all fields.',
     };
@@ -56,30 +78,39 @@ export async function registerAction(prevState: any, formData: FormData) {
   const submittedEmails = validData.members.map(m => m.email.toLowerCase());
   const uniqueEmails = new Set(submittedEmails);
   if (uniqueEmails.size !== submittedEmails.length) {
-    return { message: 'Duplicate emails found within the team submission.' };
+    return {
+      success: false,
+      message: 'Duplicate emails found within the team submission.'
+    };
   }
 
+  // 2. Generate a secure unique token for this registration
+  const token = crypto.randomUUID();
+
   try {
-    // 2. Check for duplicate emails in the database
+    // 3. Check for duplicate emails in the database
     const existingUsers = await sql`
       SELECT email FROM participants WHERE email = ANY(${submittedEmails})
     `;
     
     if (existingUsers.length > 0) {
       const dups = existingUsers.map(u => u.email).join(', ');
-      return { message: `Email already registered: ${dups}` };
+      return {
+        success: false,
+        message: `Email already registered: ${dups}`
+      };
     }
 
-    // 3. Insert into Database
+    // 4. Insert into Database with token
     for (let i = 0; i < validData.members.length; i++) {
       const m = validData.members[i];
       const isLeader = i === 0;
       await sql`
-        INSERT INTO participants (team_name, is_leader, name, email, phone_number, roll_number, institution, college_year, branch)
-        VALUES (${validData.team_name}, ${isLeader}, ${m.name}, ${m.email.toLowerCase()}, ${m.phone}, ${m.roll}, ${m.institution}, ${m.year}, ${m.branch})
+        INSERT INTO participants (team_name, is_leader, name, email, phone_number, roll_number, institution, college_year, branch, token)
+        VALUES (${validData.team_name}, ${isLeader}, ${m.name}, ${m.email.toLowerCase()}, ${m.phone}, ${m.roll}, ${m.institution}, ${m.year}, ${m.branch}, ${token})
       `;
       
-      // 4. Append to Google Sheets (One row per participant)
+      // 5. Append to Google Sheets (One row per participant)
       const dateStr = new Date().toLocaleString();
       await appendToSheet([
         validData.team_name,
@@ -91,22 +122,66 @@ export async function registerAction(prevState: any, formData: FormData) {
         m.institution,
         m.year,
         m.branch,
-        dateStr
+        dateStr,
+        token
       ]);
     }
     
+    return {
+      success: true,
+      token,
+      team_name: validData.team_name,
+      members: validData.members.map((m, idx) => ({
+        name: m.name,
+        email: m.email.toLowerCase(),
+        branch: m.branch,
+        is_leader: idx === 0,
+      })),
+    };
   } catch (error) {
     console.error('Database Error:', error);
     return {
+      success: false,
       message: 'Database Error: Failed to complete registration.',
     };
   }
+}
 
-  // Redirect on success
-  const query = new URLSearchParams({
-    team: validData.team_name,
-    count: validData.members.length.toString(),
-  });
-  
-  redirect(`/success?${query.toString()}`);
+export async function getRegistrationByToken(token: string): Promise<{
+  success: boolean;
+  registration?: RegistrationData;
+  message?: string;
+}> {
+  if (!token || typeof token !== 'string' || token.trim().length === 0) {
+    return { success: false, message: 'Invalid token' };
+  }
+
+  try {
+    const rows = await sql`
+      SELECT team_name, is_leader, name, email, branch
+      FROM participants
+      WHERE token = ${token.trim()}
+      ORDER BY id ASC
+    `;
+
+    if (!rows || rows.length === 0) {
+      return { success: false, message: 'Registration not found' };
+    }
+
+    return {
+      success: true,
+      registration: {
+        team_name: rows[0].team_name as string,
+        members: rows.map(r => ({
+          name: r.name as string,
+          email: r.email as string,
+          branch: r.branch as string,
+          is_leader: Boolean(r.is_leader),
+        })),
+      },
+    };
+  } catch (error) {
+    console.error('Error fetching registration by token:', error);
+    return { success: false, message: 'Failed to retrieve registration details.' };
+  }
 }

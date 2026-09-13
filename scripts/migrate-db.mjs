@@ -20,8 +20,10 @@ async function migrate() {
         institution VARCHAR(255) NOT NULL,
         college_year VARCHAR(50) NOT NULL,
         branch VARCHAR(255) NOT NULL,
+        token VARCHAR(255),
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
       );
+      CREATE INDEX IF NOT EXISTS idx_participants_token ON participants(token);
     `;
     console.log('Table "participants" created successfully.');
   } catch (error) {

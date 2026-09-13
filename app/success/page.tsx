@@ -34,8 +34,11 @@ export default async function Success({
         </div>
       )}
 
-      <div className="animate-fade-in" style={{ animationDelay: '0.4s' }}>
-        <Link href="/" className="btn btn-primary">
+      <div className="animate-fade-in" style={{ animationDelay: '0.4s', display: 'flex', gap: '1rem', justifyContent: 'center' }}>
+        <Link href="/register" className="btn btn-primary">
+          View QR Passes
+        </Link>
+        <Link href="/" className="btn" style={{ backgroundColor: 'var(--secondary)', border: '1px solid var(--border)', color: '#fff' }}>
           Return Home
         </Link>
       </div>
