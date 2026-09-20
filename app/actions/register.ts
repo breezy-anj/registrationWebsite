@@ -44,7 +44,7 @@ export type RegisterState = {
   errors?: Record<string, string[]>;
 };
 
-export async function registerAction(prevState: any, formData: FormData): Promise<RegisterState> {
+export async function registerAction(prevState: unknown, formData: FormData): Promise<RegisterState> {
   const memberCountStr = formData.get('member_count') as string;
   const count = parseInt(memberCountStr, 10) || 1;
   const team_name = formData.get('team_name') as string;
