@@ -22,7 +22,6 @@ import {
 
 gsap.registerPlugin(ScrollTrigger);
 
-// SSR-safe dynamic import for Three.js canvas
 const CyberCore3D = dynamic(() => import('./CyberCore3D'), { ssr: false });
 
 /* ── Preloader (Gen-Z Cyberpunk Dark) ──────────────────────── */
@@ -501,12 +500,12 @@ export default function HomePage() {
 
         {/* ── HERO ──────────────────────────────────────────────── */}
         <section style={{
-          minHeight: '100vh',
+          minHeight: '100dvh',
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
           justifyContent: 'center',
-          padding: 'clamp(4.5rem, 7.5vh, 5.5rem) 1.5rem 2rem',
+          padding: 'clamp(5rem, 6vh, 6rem) 1.25rem 1rem',
           position: 'relative',
           overflow: 'hidden',
         }}>
@@ -521,90 +520,127 @@ export default function HomePage() {
             zIndex: 0,
           }} />
 
-          {/* 3D Core Canvas — Enlarged, Engaging Viewport Stage */}
-          <div
-            ref={coreRef}
-            style={{
-              width: 'min(94vw, 520px)',
-              height: 'clamp(350px, 60vh, 420px)',
-              position: 'relative',
-              marginBottom: '0.65rem',
-              opacity: 0,
-              zIndex: 1,
-            }}
-          >
+          {/* 3D Core Canvas (Insanely Large Background) */}
+          <div style={{
+            position: 'absolute',
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            width: '150vw',
+            height: '150vh',
+            minWidth: '1200px',
+            minHeight: '1200px',
+            zIndex: 0,
+            opacity: 0.35,
+            pointerEvents: 'none',
+          }}>
             {ready && <CyberCore3D style={{ width: '100%', height: '100%' }} />}
           </div>
 
-          {/* Badge */}
-          <div ref={heroBadgeRef} style={{ opacity: 0, marginBottom: '0.65rem', zIndex: 1 }}>
-            <span className="badge badge-primary badge-dot" style={{ fontWeight: 700, letterSpacing: '0.04em' }}>
-              Nibble Computer Society Presents
-            </span>
-          </div>
+          <div className="hero-split">
+            {/* LEFT COLUMN: TEXT */}
+            <div className="hero-text-content">
+              {/* Badge */}
+              <div ref={heroBadgeRef} style={{ opacity: 0, marginBottom: '0.65rem', zIndex: 1 }}>
+                <span className="badge badge-primary badge-shimmer" style={{ fontWeight: 700, letterSpacing: '0.04em', background: 'var(--surface)' }}>
+                  Nibble Computer Society Presents
+                </span>
+              </div>
 
-          {/* Poster Headline with !! */}
-          <h1
-            ref={heroTitleRef}
-            style={{
-              fontSize: 'clamp(2.3rem, 6.2vw, 4.4rem)',
-              fontWeight: 900,
-              textAlign: 'center',
-              lineHeight: 1.05,
-              letterSpacing: '-0.04em',
-              marginBottom: '0.85rem',
-              opacity: 0,
-              zIndex: 1,
-            }}
-          >
-            <span style={{ color: 'var(--primary)' }}>How to</span>{' '}
-            <span style={{ color: 'var(--foreground)' }}>
-              Hackathon<span style={{ color: 'var(--primary)' }}>!!</span>
-            </span>
-          </h1>
+              {/* Poster Headline with !! */}
+              <h1
+                ref={heroTitleRef}
+                style={{
+                  fontSize: 'clamp(1.85rem, 6vw, 4.4rem)',
+                  fontWeight: 900,
+                  lineHeight: 1.05,
+                  letterSpacing: '-0.04em',
+                  marginBottom: '0.85rem',
+                  opacity: 0,
+                  zIndex: 1,
+                }}
+              >
+                <span style={{ color: 'var(--primary)' }}>How to</span>{' '}
+                <span style={{ color: 'var(--foreground)' }}>
+                  Hackathon<span style={{ color: 'var(--primary)' }}>!!</span>
+                </span>
+              </h1>
 
-          {/* Poster Subtitles */}
-          <div
-            ref={heroDescRef}
-            style={{
-              textAlign: 'center',
-              maxWidth: '600px',
-              marginBottom: '1.75rem',
-              opacity: 0,
-              zIndex: 1,
-            }}
-          >
-            <p style={{
-              fontSize: 'clamp(1.15rem, 2.7vw, 1.4rem)',
-              fontWeight: 800,
-              letterSpacing: '-0.02em',
-              color: 'var(--foreground)',
-              marginBottom: '0.35rem',
-            }}>
-              From <span style={{ color: 'var(--primary)' }}>Ideas.</span> To <span style={{ color: 'var(--primary)' }}>Prototype.</span>
-            </p>
-            <p style={{
-              fontSize: 'clamp(0.88rem, 1.9vw, 0.98rem)',
-              color: 'var(--muted-fg)',
-              lineHeight: 1.55,
-            }}>
-              <strong style={{ color: 'var(--foreground)' }}>Stay Tuned. Stay Ahead.</strong> · Ideate, collaborate, and conquer hackathons with mentored guidance.
-            </p>
-          </div>
+              {/* Poster Subtitles */}
+              <div
+                ref={heroDescRef}
+                style={{
+                  maxWidth: '600px',
+                  marginBottom: '1.75rem',
+                  opacity: 0,
+                  zIndex: 1,
+                }}
+              >
+                <p style={{
+                  fontSize: 'clamp(1.05rem, 2.5vw, 1.4rem)',
+                  fontWeight: 800,
+                  letterSpacing: '-0.02em',
+                  color: 'var(--foreground)',
+                  marginBottom: '0.35rem',
+                }}>
+                  From <span style={{ color: 'var(--primary)' }}>Ideas.</span> To <span style={{ color: 'var(--primary)' }}>Prototype.</span>
+                </p>
+                <p style={{
+                  fontSize: 'clamp(0.88rem, 1.9vw, 0.98rem)',
+                  color: 'var(--muted-fg)',
+                  lineHeight: 1.55,
+                }}>
+                  <strong style={{ color: 'var(--foreground)' }}>Stay Tuned. Stay Ahead.</strong> · Ideate, collaborate, and conquer hackathons with mentored guidance.
+                </p>
+              </div>
 
-          {/* CTAs */}
-          <div
-            ref={heroCtaRef}
-            style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap', justifyContent: 'center', opacity: 0, zIndex: 1 }}
-          >
-            <Link href="/register" className="btn btn-primary" style={{ minWidth: '180px', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem' }}>
-              <Rocket size={18} />
-              Register Now
-            </Link>
-            <a href="#about" className="btn btn-ghost" style={{ minWidth: '140px', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: '0.35rem' }}>
-              Learn More
-              <ChevronDown size={16} />
-            </a>
+              {/* CTAs */}
+              <div
+                ref={heroCtaRef}
+                className="hero-cta-container"
+                style={{ opacity: 0, zIndex: 1 }}
+              >
+                <Link href="/register" className="btn btn-primary" style={{ minWidth: '180px', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem' }}>
+                  <Rocket size={18} />
+                  Register Now
+                </Link>
+                <a href="#about" className="btn btn-ghost" style={{ minWidth: '140px', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: '0.35rem' }}>
+                  Learn More
+                  <ChevronDown size={16} />
+                </a>
+              </div>
+            </div>
+
+            {/* RIGHT COLUMN: IMAGE */}
+            <div className="hero-image-content">
+
+              {/* Main Hero Illustration */}
+              <div
+                ref={coreRef}
+                style={{
+                  width: 'clamp(200px, 65vw, 550px)',
+                  aspectRatio: '1',
+                  position: 'relative',
+                  opacity: 0,
+                  zIndex: 1,
+                }}
+              >
+                {ready && (
+                  <div style={{ width: '100%', height: '100%', animation: 'float-logo 6s ease-in-out infinite' }}>
+                    <Image 
+                      src="/document.svg" 
+                      alt="Hero Illustration" 
+                      fill
+                      style={{ 
+                        objectFit: 'contain',
+                        filter: 'drop-shadow(0 25px 35px rgba(0,0,0,0.9)) drop-shadow(0 0 50px rgba(220, 38, 38, 0.45))'
+                      }}
+                      priority
+                    />
+                  </div>
+                )}
+              </div>
+            </div>
           </div>
         </section>
 
@@ -879,7 +915,7 @@ export default function HomePage() {
             {/* Social Connection Pills */}
             <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap', justifyContent: 'center' }}>
               <a
-                href="https://linkedin.com/company/nibble-computer-society"
+                href="https://www.linkedin.com/company/hackncs/home/"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="footer-social-pill"

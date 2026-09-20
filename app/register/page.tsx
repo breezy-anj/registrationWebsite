@@ -51,7 +51,7 @@ function MemberQRCodeCard({ member, index }: { member: MemberData; index: number
   return (
     <div
       ref={cardRef}
-      className="glass-bright"
+      className="glass"
       style={{
         borderRadius: 'var(--radius-lg)',
         overflow: 'hidden',
@@ -103,8 +103,8 @@ function MemberQRCodeCard({ member, index }: { member: MemberData; index: number
 
         {/* Member info */}
         <div style={{ textAlign: 'center', width: '100%' }}>
-          <p style={{ fontSize: '1.1rem', fontWeight: 700, marginBottom: '0.25rem' }}>{member.name}</p>
-          <p style={{ fontSize: '0.8rem', color: 'var(--accent)', marginBottom: '0.2rem', fontFamily: 'var(--font-mono)' }}>{member.branch}</p>
+          <p style={{ fontSize: '1.1rem', fontWeight: 700, marginBottom: '0.25rem', color: 'var(--foreground)' }}>{member.name}</p>
+          <p style={{ fontSize: '0.8rem', color: 'var(--primary)', marginBottom: '0.2rem', fontFamily: 'var(--font-mono)' }}>{member.branch}</p>
           <p style={{ fontSize: '0.75rem', color: 'var(--muted-fg)' }}>{member.email}</p>
         </div>
       </div>
@@ -285,8 +285,8 @@ export default function Register() {
         gap: '1.5rem',
       }}>
         <div style={{ position: 'relative', animation: 'spin-slow 3s linear infinite' }}>
-          <Image src="/logo.png" alt="NCS" width={70} height={31} className="ncs-logo-img ncs-logo-light" style={{ opacity: 0.85 }} />
-          <Image src="/logo-white.png" alt="NCS" width={70} height={31} className="ncs-logo-img ncs-logo-dark" style={{ opacity: 0.85 }} />
+          <Image src="/logo.png" alt="NCS" width={100} height={44} className="ncs-logo-img ncs-logo-light" style={{ opacity: 0.85 }} />
+          <Image src="/logo-white.png" alt="NCS" width={100} height={44} className="ncs-logo-img ncs-logo-dark" style={{ opacity: 0.85 }} />
         </div>
         <p style={{ fontFamily: 'var(--font-mono)', fontSize: '0.72rem', color: 'var(--muted)', letterSpacing: '0.12em' }}>
           CHECKING REGISTRATION STATUS...
@@ -310,10 +310,6 @@ export default function Register() {
 
         {/* Header */}
         <div style={{ textAlign: 'center', marginBottom: '2.5rem' }}>
-          <div style={{ display: 'inline-block', margin: '0 auto 1.25rem' }}>
-            <Image src="/logo.png" alt="NCS" width={90} height={40} className="ncs-logo-img ncs-logo-light" />
-            <Image src="/logo-white.png" alt="NCS" width={90} height={40} className="ncs-logo-img ncs-logo-dark" />
-          </div>
           <span className="badge badge-primary" style={{ marginBottom: '0.875rem', display: 'inline-flex', alignItems: 'center', gap: '0.4rem' }}>
             <Sparkles size={14} />
             <span>Registration Confirmed</span>
@@ -362,11 +358,7 @@ export default function Register() {
 
       {/* Page header */}
       <div style={{ textAlign: 'center', marginBottom: '2.5rem' }}>
-        <div style={{ display: 'inline-block', margin: '0 auto 1.25rem', animation: 'float-logo 5s ease-in-out infinite' }}>
-          <Image src="/logo.png" alt="NCS" width={90} height={40} className="ncs-logo-img ncs-logo-light" />
-          <Image src="/logo-white.png" alt="NCS" width={90} height={40} className="ncs-logo-img ncs-logo-dark" />
-        </div>
-        <span className="badge badge-primary" style={{ marginBottom: '0.875rem' }}>How to Hackathon.</span>
+
         <h1 style={{ fontSize: 'clamp(1.75rem, 5vw, 2.5rem)', marginBottom: '0.5rem' }}>
           Join the <span className="gradient-text">Challenge</span>
         </h1>
@@ -467,8 +459,8 @@ export default function Register() {
       {/* Footer brand */}
       <div style={{ textAlign: 'center', marginTop: '2.5rem', opacity: 0.7 }}>
         <div style={{ display: 'inline-block' }}>
-          <Image src="/logo.png" alt="NCS" width={70} height={31} className="ncs-logo-img ncs-logo-light" />
-          <Image src="/logo-white.png" alt="NCS" width={70} height={31} className="ncs-logo-img ncs-logo-dark" />
+          <Image src="/logo.png" alt="NCS" width={100} height={44} className="ncs-logo-img ncs-logo-light" />
+          <Image src="/logo-white.png" alt="NCS" width={100} height={44} className="ncs-logo-img ncs-logo-dark" />
         </div>
       </div>
     </div>

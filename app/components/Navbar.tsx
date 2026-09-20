@@ -3,11 +3,12 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { useEffect, useRef, useState } from 'react';
-import { Sun, Moon } from 'lucide-react';
+import { Sun, Moon, Menu, X } from 'lucide-react';
 
 export default function Navbar() {
   const navRef = useRef<HTMLElement>(null);
   const [theme, setTheme] = useState<'light' | 'dark'>('light');
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   // Initialize theme from localStorage / default light
   useEffect(() => {
@@ -45,43 +46,53 @@ export default function Navbar() {
   return (
     <nav ref={navRef} className="nav" style={{ animation: 'fadeIn 0.6s ease-out forwards' }}>
       {/* NCS Logo */}
-      <Link href="/" className="ncs-logo-wrapper">
-        <Image
-          src="/logo.png"
-          alt="NCS – Nibble Computer Society"
-          width={70}
-          height={31}
-          className="ncs-logo-img ncs-logo-light"
-          priority
-        />
-        <Image
-          src="/logo-white.png"
-          alt="NCS – Nibble Computer Society"
-          width={70}
-          height={31}
-          className="ncs-logo-img ncs-logo-dark"
-          priority
-        />
+      <Link href="/" className="ncs-logo-wrapper" style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+        <div style={{ display: 'flex' }}>
+          <Image
+            src="/logo.png"
+            alt="NCS"
+            width={120}
+            height={53}
+            className="ncs-logo-img ncs-logo-light"
+            priority
+          />
+          <Image
+            src="/logo-white.png"
+            alt="NCS"
+            width={120}
+            height={53}
+            className="ncs-logo-img ncs-logo-dark"
+            priority
+          />
+        </div>
         <span
           style={{
-            fontFamily: 'var(--font-mono)',
-            fontSize: '0.82rem',
+            fontFamily: 'var(--font-sans)',
+            fontSize: '1.4rem',
             fontWeight: 800,
-            letterSpacing: '0.14em',
+            letterSpacing: '0.3em',
             textTransform: 'uppercase',
             color: 'var(--foreground)',
-            lineHeight: 1.25,
           }}
         >
-          NCS<br />
-          <span style={{ color: 'var(--primary)', fontSize: '0.66rem', fontWeight: 700, letterSpacing: '0.08em' }}>Nibble Computer Society</span>
+          EVENTS
         </span>
       </Link>
 
+      {/* Mobile Menu Toggle */}
+      <button
+        className="mobile-menu-btn"
+        onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+        aria-label="Toggle Menu"
+      >
+        {isMobileMenuOpen ? <X size={26} /> : <Menu size={26} />}
+      </button>
+
       {/* Nav Links */}
-      <ul className="nav-links">
-        <li><Link href="/#about" className="nav-link">About</Link></li>
-        <li><Link href="/#event-flow" className="nav-link">Event</Link></li>
+      <ul className={`nav-links ${isMobileMenuOpen ? 'nav-links-open' : ''}`}>
+        <li><Link href="/#about" className="nav-link" onClick={() => setIsMobileMenuOpen(false)}>About</Link></li>
+        <li><Link href="/#event-flow" className="nav-link" onClick={() => setIsMobileMenuOpen(false)}>Event</Link></li>
+        <li><a href="https://hackncs.in" target="_blank" rel="noopener noreferrer" className="nav-link" onClick={() => setIsMobileMenuOpen(false)}>Website</a></li>
         {/* Dark Mode Toggle */}
         <li>
           <button
