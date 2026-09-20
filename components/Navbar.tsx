@@ -43,6 +43,7 @@ export default function Navbar() {
             height: '44px',
             display: 'flex',
             alignItems: 'center',
+            gap: '1.5rem',
           }}>
             <Image
               src="/ncs-logo.png"
@@ -56,6 +57,17 @@ export default function Navbar() {
               }}
               priority
             />
+            <span style={{
+              fontFamily: 'var(--font-sans), Arial Black, Impact, sans-serif',
+              fontWeight: 900,
+              fontSize: '1.35rem',
+              letterSpacing: '0.3em',
+              color: 'var(--black)',
+              marginTop: '4px',
+              opacity: 0.8
+            }}>
+              EVENTS
+            </span>
           </div>
         </Link>
 
