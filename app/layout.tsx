@@ -1,20 +1,25 @@
-import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
-import "./globals.css";
+import type { Metadata } from 'next';
+import { Plus_Jakarta_Sans } from 'next/font/google';
+import Navbar from '@/components/Navbar';
+import Footer from '@/components/Footer';
+import './globals.css';
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
+const plusJakartaSans = Plus_Jakarta_Sans({
+  subsets: ['latin'],
+  weight: ['400', '500', '600', '700', '800'],
+  variable: '--font-sans',
+  display: 'swap',
 });
 
 export const metadata: Metadata = {
-  title: "How to Hackathon !! - Registration",
-  description: "Register for the How to Hackathon event and learn the dynamics of tech competitions.",
+  title: 'How to Hackathon. | From Ideas. To Prototype.',
+  description: 'Join the premier hackathon experience. Learn ideation, competition dynamics, and rapid prototyping.',
+  keywords: ['Hackathon', 'Coding Challenge', 'Tech Workshop', 'Prototype', 'Innovation', 'Student Competition'],
+  openGraph: {
+    title: 'How to Hackathon. | From Ideas. To Prototype.',
+    description: 'Learn the dynamics of tech competitions, networking, and modern trends. Register now for the hackathon.',
+    type: 'website',
+  },
 };
 
 export default function RootLayout({
@@ -23,8 +28,19 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${geistSans.variable} ${geistMono.variable}`}>
-      <body>{children}</body>
+    <html lang="en" className={plusJakartaSans.variable}>
+      <body style={{
+        display: 'flex',
+        flexDirection: 'column',
+        minHeight: '100vh',
+        backgroundColor: '#FFFFFF',
+      }}>
+        <Navbar />
+        <div style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
+          {children}
+        </div>
+        <Footer />
+      </body>
     </html>
   );
 }
