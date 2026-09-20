@@ -1,24 +1,26 @@
-import type { Metadata } from 'next';
-import { Plus_Jakarta_Sans } from 'next/font/google';
-import Navbar from '@/components/Navbar';
-import Footer from '@/components/Footer';
-import './globals.css';
+import type { Metadata } from "next";
+import { Outfit } from "next/font/google";
+import "./globals.css";
+import Navbar from "./components/Navbar";
 
-const plusJakartaSans = Plus_Jakarta_Sans({
-  subsets: ['latin'],
-  weight: ['400', '500', '600', '700', '800'],
-  variable: '--font-sans',
-  display: 'swap',
+const outfit = Outfit({
+  subsets: ["latin"],
+  weight: ["300", "400", "600", "700", "800", "900"],
+  variable: "--font-outfit",
 });
 
 export const metadata: Metadata = {
-  title: 'How to Hackathon. | From Ideas. To Prototype.',
-  description: 'Join the premier hackathon experience. Learn ideation, competition dynamics, and rapid prototyping.',
-  keywords: ['Hackathon', 'Coding Challenge', 'Tech Workshop', 'Prototype', 'Innovation', 'Student Competition'],
+  title: "How to Hackathon!! — Nibble Computer Society",
+  description:
+    "Register for How to Hackathon!! — presented by NCS. Unite with creative thinkers, learn hackathon dynamics, and compete for glory.",
+  icons: {
+    icon: "/logo.png",
+    apple: "/logo.png",
+  },
   openGraph: {
-    title: 'How to Hackathon. | From Ideas. To Prototype.',
-    description: 'Learn the dynamics of tech competitions, networking, and modern trends. Register now for the hackathon.',
-    type: 'website',
+    title: "How to Hackathon!! — NCS",
+    description: "Register now for the How to Hackathon!! event by Nibble Computer Society.",
+    images: [{ url: "/logo.png" }],
   },
 };
 
@@ -28,18 +30,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={plusJakartaSans.variable}>
-      <body style={{
-        display: 'flex',
-        flexDirection: 'column',
-        minHeight: '100vh',
-        backgroundColor: '#FFFFFF',
-      }}>
+    <html lang="en" className={outfit.variable}>
+      <body>
         <Navbar />
-        <div style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
-          {children}
-        </div>
-        <Footer />
+        {children}
       </body>
     </html>
   );

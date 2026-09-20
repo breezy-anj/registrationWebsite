@@ -1,133 +1,140 @@
-import React from 'react';
 import Link from 'next/link';
-import { CheckCircle2, Home, QrCode } from 'lucide-react';
+import Image from 'next/image';
+import { QrCode, ArrowLeft } from 'lucide-react';
 
-interface SuccessPageProps {
-  searchParams?: Promise<{ [key: string]: string | string[] | undefined }> | { [key: string]: string | string[] | undefined };
-}
-
-export default async function SuccessPage(props: SuccessPageProps) {
-  let resolvedParams: { [key: string]: string | string[] | undefined } = {};
-
-  if (props?.searchParams) {
-    if (props.searchParams instanceof Promise) {
-      resolvedParams = await props.searchParams;
-    } else {
-      resolvedParams = props.searchParams;
-    }
-  }
-
-  const team = typeof resolvedParams.team === 'string' ? resolvedParams.team : '';
-  const count = typeof resolvedParams.count === 'string' ? resolvedParams.count : '';
+export default async function Success({
+  searchParams,
+}: {
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+}) {
+  const resolvedParams = await searchParams;
+  const team = resolvedParams.team as string;
+  const count = resolvedParams.count as string;
 
   return (
     <main style={{
-      maxWidth: '800px',
-      margin: '0 auto',
-      padding: '4rem 1.5rem 6rem 1.5rem',
-      width: '100%',
+      minHeight: '100vh',
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+      justifyContent: 'center',
+      padding: '6rem 2rem 4rem',
+      position: 'relative',
+      overflow: 'hidden',
     }}>
-      <div className="animate-fade-in" style={{
-        backgroundColor: '#FFFFFF',
-        border: '1px solid var(--border-color)',
-        borderRadius: '20px',
-        boxShadow: 'var(--shadow-lg)',
-        padding: 'clamp(2rem, 5vw, 3.5rem)',
-        textAlign: 'center',
-      }}>
-        {/* Success Icon */}
-        <div style={{
-          width: '72px',
-          height: '72px',
-          backgroundColor: 'var(--success-bg)',
-          color: 'var(--success)',
+      {/* Ambient glow */}
+      <div style={{
+        position: 'absolute',
+        top: '20%', left: '50%',
+        transform: 'translateX(-50%)',
+        width: '500px', height: '400px',
+        background: 'radial-gradient(circle, rgba(16,185,129,0.1) 0%, transparent 70%)',
+        pointerEvents: 'none',
+      }} />
+
+      {/* NCS logo */}
+      <div className="animate-float-logo" style={{ marginBottom: '2rem' }}>
+        <Image
+          src="/logo.png"
+          alt="NCS"
+          width={90}
+          height={40}
+          className="ncs-logo-img ncs-logo-light"
+          style={{ opacity: 0.9 }}
+          priority
+        />
+        <Image
+          src="/logo-white.png"
+          alt="NCS"
+          width={90}
+          height={40}
+          className="ncs-logo-img ncs-logo-dark"
+          style={{ opacity: 0.9 }}
+          priority
+        />
+      </div>
+
+      {/* Success icon */}
+      <div
+        className="animate-fade-scale"
+        style={{
+          width: '72px', height: '72px',
           borderRadius: '50%',
+          background: 'linear-gradient(135deg, #10b981, #06b6d4)',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          margin: '0 auto 1.5rem auto',
-          boxShadow: '0 6px 16px rgba(22, 163, 74, 0.2)',
-        }}>
-          <CheckCircle2 size={42} />
+          marginBottom: '1.5rem',
+          boxShadow: '0 0 32px rgba(16,185,129,0.45)',
+        }}
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24"
+          fill="none" stroke="#fff" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+          <polyline points="20 6 9 17 4 12" />
+        </svg>
+      </div>
+
+      <span className="badge badge-accent animate-fade-in" style={{ marginBottom: '1rem' }}>
+        Registration Confirmed!
+      </span>
+
+      <h1
+        className="animate-fade-in"
+        style={{ animationDelay: '0.1s', fontSize: 'clamp(2rem, 5vw, 3rem)', textAlign: 'center', marginBottom: '0.875rem' }}
+      >
+        You&apos;re <span className="gradient-text">In!!</span>
+      </h1>
+
+      <p
+        className="animate-fade-in"
+        style={{
+          animationDelay: '0.2s',
+          color: 'var(--muted-fg)',
+          fontSize: '1rem',
+          maxWidth: '500px',
+          textAlign: 'center',
+          lineHeight: 1.7,
+          marginBottom: '2rem',
+        }}
+      >
+        Thank you for registering for <strong style={{ color: 'var(--foreground)' }}>How to Hackathon!!</strong>.
+        We&apos;ve saved your details. See you at the event!
+      </p>
+
+      {team && (
+        <div
+          className="glass-bright animate-fade-in"
+          style={{
+            animationDelay: '0.3s',
+            padding: '1.5rem 2rem',
+            borderRadius: 'var(--radius-lg)',
+            marginBottom: '2rem',
+            textAlign: 'center',
+            minWidth: '260px',
+          }}
+        >
+          <p style={{ fontSize: '0.72rem', letterSpacing: '0.1em', color: 'var(--muted-fg)', textTransform: 'uppercase', marginBottom: '0.5rem', fontFamily: 'var(--font-mono)' }}>Team Name</p>
+          <p className="gradient-text" style={{ fontSize: '1.4rem', fontWeight: 800 }}>{team}</p>
+          <p style={{ fontSize: '0.85rem', color: 'var(--muted-fg)', marginTop: '0.5rem' }}>
+            {count || 1} member{(parseInt(count) || 1) !== 1 ? 's' : ''} registered
+          </p>
         </div>
+      )}
 
-        {/* Header Text */}
-        <div style={{
-          display: 'inline-block',
-          color: 'var(--primary-red)',
-          fontWeight: 800,
-          fontSize: '0.85rem',
-          letterSpacing: '0.12em',
-          textTransform: 'uppercase',
-          marginBottom: '0.5rem',
-        }}>
-          Registration Confirmed
-        </div>
+      <div className="animate-fade-in" style={{ animationDelay: '0.4s', display: 'flex', gap: '1rem', flexWrap: 'wrap', justifyContent: 'center' }}>
+        <Link href="/register" className="btn btn-primary" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem' }}>
+          <QrCode size={18} />
+          View QR Passes
+        </Link>
+        <Link href="/" className="btn btn-ghost" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem' }}>
+          <ArrowLeft size={16} />
+          Return Home
+        </Link>
+      </div>
 
-        <h1 style={{
-          fontSize: 'clamp(2rem, 4vw, 3rem)',
-          fontWeight: 800,
-          color: 'var(--black)',
-          letterSpacing: '-0.03em',
-          marginBottom: '1rem',
-        }}>
-          You&apos;re <span className="text-red">In!</span>
-        </h1>
-
-        <p style={{
-          fontSize: '1.05rem',
-          color: 'var(--text-muted)',
-          maxWidth: '540px',
-          margin: '0 auto 2rem auto',
-          lineHeight: 1.6,
-        }}>
-          Thank you for registering for the <strong>How to Hackathon.</strong> session. Your team entry has been recorded in our system.
-        </p>
-
-        {/* Dynamic Team Info Box */}
-        {team && (
-          <div style={{
-            backgroundColor: 'var(--bg-subtle)',
-            border: '1px solid var(--border-color)',
-            borderRadius: '12px',
-            padding: '1.5rem',
-            maxWidth: '480px',
-            margin: '0 auto 2.5rem auto',
-            textAlign: 'left',
-          }}>
-            <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)', fontWeight: 700, textTransform: 'uppercase' }}>
-              Registered Squad
-            </div>
-            <div style={{ fontSize: '1.35rem', fontWeight: 800, color: 'var(--black)', marginBottom: '0.5rem' }}>
-              {team}
-            </div>
-            {count && (
-              <div style={{ fontSize: '0.9rem', color: 'var(--text-muted)' }}>
-                <strong>Participants:</strong> {count} Member(s)
-              </div>
-            )}
-          </div>
-        )}
-
-        {/* Action Buttons */}
-        <div style={{
-          display: 'flex',
-          flexWrap: 'wrap',
-          gap: '1rem',
-          justifyContent: 'center',
-          alignItems: 'center',
-        }}>
-          <Link href="/register" className="btn btn-primary" style={{ minWidth: '200px' }}>
-            <QrCode size={18} />
-            <span>View QR Passes</span>
-          </Link>
-
-          <Link href="/" className="btn btn-secondary">
-            <Home size={18} />
-            <span>Back to Home</span>
-          </Link>
-        </div>
-
+      {/* Footer brand */}
+      <div style={{ marginTop: '3rem', opacity: 0.6 }}>
+        <Image src="/logo.png" alt="NCS" width={70} height={31} />
       </div>
     </main>
   );

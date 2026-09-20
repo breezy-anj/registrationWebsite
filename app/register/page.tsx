@@ -1,220 +1,242 @@
 'use client';
 
-import React, { useState, useEffect, useTransition } from 'react';
-import Link from 'next/link';
+import { useState, useEffect, useTransition, useRef } from 'react';
 import QRCode from 'qrcode';
-import { 
-  ArrowLeft, 
-  ArrowRight, 
-  Users, 
-  UserCheck, 
-  ShieldCheck, 
-  Plus, 
-  Trash2, 
-  AlertCircle, 
-  CheckCircle, 
-  Copy, 
-  Check, 
+import Link from 'next/link';
+import Image from 'next/image';
+import gsap from 'gsap';
+import {
+  Crown,
   Sparkles,
-  RefreshCw
+  Rocket,
+  AlertTriangle,
+  Loader2,
+  Plus,
+  Minus,
+  ArrowLeft,
 } from 'lucide-react';
-import FormField from '@/components/FormField';
-import { submitRegistration, fetchRegistrationByToken, type MemberPayload } from '@/services/api';
-import { type MemberData, type RegistrationData } from '@/app/actions/register';
+import {
+  registerAction,
+  getRegistrationByToken,
+  MemberData,
+  RegistrationData,
+} from '../actions/register';
 
-const INSTITUTION_OPTIONS = [
-  { value: 'AKTU', label: 'AKTU' },
-  { value: 'University', label: 'University' },
-  { value: 'Other College/Institute', label: 'Other College/Institute' },
-];
-
-const YEAR_OPTIONS = [
-  { value: '1st Year', label: '1st Year' },
-  { value: '2nd Year', label: '2nd Year' },
-  { value: '3rd Year', label: '3rd Year' },
-  { value: '4th Year', label: '4th Year' },
-];
-
-const BRANCH_OPTIONS = [
-  { value: 'CSE - core', label: 'Computer Science & Engineering (Core)' },
-  { value: 'CSE - AIML', label: 'CSE - AI & Machine Learning' },
-  { value: 'CSE - DS', label: 'CSE - Data Science' },
-  { value: 'IT', label: 'Information Technology' },
-  { value: 'OTHER', label: 'Other Specialization' },
-];
-
-// QR Pass component for registered members
-function MemberPassCard({ member, teamName }: { member: MemberData; teamName: string }) {
-  const [qrUrl, setQrUrl] = useState<string>('');
-  const [copied, setCopied] = useState(false);
+/* ── QR card ─────────────────────────────────────────────────── */
+function MemberQRCodeCard({ member, index }: { member: MemberData; index: number }) {
+  const [qrDataUrl, setQrDataUrl] = useState<string>('');
+  const cardRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (!member.email) return;
-    // Generate high resolution QR code with dark ink & clear contrast
-    QRCode.toDataURL(JSON.stringify({
-      team: teamName,
-      name: member.name,
-      email: member.email,
-      role: member.is_leader ? 'Leader' : 'Member',
-      branch: member.branch
-    }), {
-      width: 360,
+    QRCode.toDataURL(member.email, {
+      width: 320,
       margin: 2,
-      color: {
-        dark: '#0A0A0A',
-        light: '#FFFFFF',
-      },
+      color: { dark: '#0a0a0f', light: '#ffffff' },
     })
-      .then((url) => setQrUrl(url))
-      .catch((err) => console.error('Failed to generate QR:', err));
-  }, [member, teamName]);
+      .then(setQrDataUrl)
+      .catch((err) => console.error('QR Generation failed:', err));
+  }, [member.email]);
 
-  const handleCopyEmail = () => {
-    navigator.clipboard.writeText(member.email);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
-  };
+  // Animate card in
+  useEffect(() => {
+    if (!cardRef.current) return;
+    gsap.fromTo(
+      cardRef.current,
+      { opacity: 0, y: 30, scale: 0.93 },
+      { opacity: 1, y: 0, scale: 1, duration: 0.55, delay: index * 0.12, ease: 'back.out(1.3)' }
+    );
+  }, [index]);
 
   return (
-    <div style={{
-      backgroundColor: '#FFFFFF',
-      border: '1.5px solid var(--border-color)',
-      borderRadius: '16px',
-      overflow: 'hidden',
-      boxShadow: 'var(--shadow-md)',
-      display: 'flex',
-      flexDirection: 'column',
-      position: 'relative',
-    }}>
-      {/* Top Header Card Stripe */}
+    <div
+      ref={cardRef}
+      className="glass-bright"
+      style={{
+        borderRadius: 'var(--radius-lg)',
+        overflow: 'hidden',
+        opacity: 0,
+      }}
+    >
+      {/* Top accent bar */}
       <div style={{
-        backgroundColor: member.is_leader ? 'var(--primary-red)' : 'var(--black)',
-        color: '#FFFFFF',
-        padding: '0.85rem 1.25rem',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-      }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-          <ShieldCheck size={18} />
-          <span style={{ fontSize: '0.85rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-            {member.is_leader ? 'Team Leader Pass' : 'Team Member Pass'}
-          </span>
-        </div>
-        <span style={{ fontSize: '0.75rem', opacity: 0.85, fontWeight: 600 }}>
-          VENUE PASS
-        </span>
-      </div>
+        height: '3px',
+        background: member.is_leader
+          ? 'linear-gradient(90deg, var(--primary), var(--accent))'
+          : 'linear-gradient(90deg, var(--accent), var(--emerald))',
+      }} />
 
-      <div style={{ padding: '1.5rem', display: 'flex', flexDirection: 'column', alignItems: 'center', flex: 1 }}>
-        {/* QR Code Container */}
+      <div style={{ padding: '1.75rem', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1rem' }}>
+        {/* Role badge */}
+        <span className={`badge ${member.is_leader ? 'badge-primary' : 'badge-accent'}`} style={{ display: 'inline-flex', alignItems: 'center', gap: '0.35rem' }}>
+          {member.is_leader ? (
+            <>
+              <Crown size={13} />
+              <span>Team Leader</span>
+            </>
+          ) : (
+            `Member ${index + 1}`
+          )}
+        </span>
+
+        {/* QR Code */}
         <div style={{
           padding: '0.75rem',
-          backgroundColor: '#FFFFFF',
-          borderRadius: '12px',
-          border: '1px solid var(--border-color)',
-          boxShadow: 'var(--shadow-sm)',
-          marginBottom: '1.25rem',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          width: '200px',
-          height: '200px',
+          background: '#fff',
+          borderRadius: 'var(--radius-md)',
+          boxShadow: member.is_leader
+            ? '0 0 24px var(--primary-glow)'
+            : '0 0 16px rgba(6,182,212,0.3)',
         }}>
-          {qrUrl ? (
-            <img
-              src={qrUrl}
-              alt={`QR Verification Pass for ${member.name}`}
-              style={{ width: '100%', height: '100%', objectFit: 'contain' }}
-            />
+          {qrDataUrl ? (
+            <img src={qrDataUrl} alt={`QR for ${member.name}`} width={160} height={160} />
           ) : (
-            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.5rem', color: 'var(--text-muted)' }}>
-              <RefreshCw className="animate-spin" size={24} />
-              <span style={{ fontSize: '0.8rem' }}>Generating QR...</span>
+            <div style={{
+              width: 160, height: 160,
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              fontFamily: 'var(--font-mono)', fontSize: '0.65rem', color: '#888',
+            }}>
+              GENERATING...
             </div>
           )}
         </div>
 
-        {/* Member Details */}
-        <div style={{ width: '100%', textAlign: 'center' }}>
-          <h3 style={{ fontSize: '1.25rem', fontWeight: 800, color: 'var(--black)', marginBottom: '0.2rem' }}>
-            {member.name}
-          </h3>
-          <p style={{ fontSize: '0.85rem', color: 'var(--primary-red)', fontWeight: 700, marginBottom: '0.75rem' }}>
-            {member.branch}
-          </p>
-
-          <div style={{
-            backgroundColor: 'var(--bg-subtle)',
-            padding: '0.6rem 0.85rem',
-            borderRadius: '8px',
-            border: '1px solid var(--border-color)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            gap: '0.5rem',
-          }}>
-            <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-              {member.email}
-            </span>
-            <button
-              type="button"
-              onClick={handleCopyEmail}
-              aria-label="Copy participant email"
-              style={{
-                background: 'transparent',
-                border: 'none',
-                cursor: 'pointer',
-                color: copied ? 'var(--success)' : 'var(--text-muted)',
-                display: 'flex',
-                alignItems: 'center',
-                padding: '2px',
-              }}
-            >
-              {copied ? <Check size={14} /> : <Copy size={14} />}
-            </button>
-          </div>
+        {/* Member info */}
+        <div style={{ textAlign: 'center', width: '100%' }}>
+          <p style={{ fontSize: '1.1rem', fontWeight: 700, marginBottom: '0.25rem' }}>{member.name}</p>
+          <p style={{ fontSize: '0.8rem', color: 'var(--accent)', marginBottom: '0.2rem', fontFamily: 'var(--font-mono)' }}>{member.branch}</p>
+          <p style={{ fontSize: '0.75rem', color: 'var(--muted-fg)' }}>{member.email}</p>
         </div>
       </div>
     </div>
   );
 }
 
-export default function RegisterPage() {
+/* ── Member form fields ──────────────────────────────────────── */
+function MemberFields({ index }: { index: number }) {
+  const isLeader = index === 0;
+  const prefix = `m${index}_`;
+
+  return (
+    <div
+      className="glass"
+      style={{
+        padding: '1.75rem',
+        borderRadius: 'var(--radius-lg)',
+        marginBottom: '1.5rem',
+        borderColor: isLeader ? 'rgba(139,92,246,0.35)' : 'var(--border)',
+        position: 'relative',
+      }}
+    >
+      {/* Top accent */}
+      <div style={{
+        height: '2px',
+        background: isLeader
+          ? 'linear-gradient(90deg, var(--primary), var(--accent))'
+          : 'linear-gradient(90deg, var(--accent), var(--emerald))',
+        borderRadius: '1px',
+        marginBottom: '1.25rem',
+        width: '80px',
+      }} />
+
+      <h3 style={{
+        fontSize: '1rem',
+        fontWeight: 700,
+        marginBottom: '1.25rem',
+        color: isLeader ? 'var(--primary)' : 'var(--accent)',
+        display: 'flex',
+        alignItems: 'center',
+        gap: '0.5rem',
+      }}>
+        {isLeader ? (
+          <>
+            <Crown size={16} />
+            <span>Leader Details</span>
+          </>
+        ) : (
+          `Member ${index + 1} Details`
+        )}
+      </h3>
+
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '0 1rem' }}>
+        <div className="input-group">
+          <label htmlFor={`${prefix}name`} className="input-label">Full Name</label>
+          <input type="text" id={`${prefix}name`} name={`${prefix}name`} className="input-field" placeholder="John Doe" required />
+        </div>
+        <div className="input-group">
+          <label htmlFor={`${prefix}email`} className="input-label">Email Address</label>
+          <input type="email" id={`${prefix}email`} name={`${prefix}email`} className="input-field" placeholder="john@example.com" required />
+        </div>
+        <div className="input-group">
+          <label htmlFor={`${prefix}phone`} className="input-label">Phone Number</label>
+          <input type="tel" id={`${prefix}phone`} name={`${prefix}phone`} className="input-field" placeholder="10-digit number" pattern="[0-9]{10}" maxLength={10} required />
+        </div>
+        <div className="input-group">
+          <label htmlFor={`${prefix}roll`} className="input-label">Roll Number</label>
+          <input type="text" id={`${prefix}roll`} name={`${prefix}roll`} className="input-field" placeholder="2003... / 230..." required />
+        </div>
+        <div className="input-group">
+          <label htmlFor={`${prefix}institution`} className="input-label">Institution</label>
+          <select id={`${prefix}institution`} name={`${prefix}institution`} className="input-field" required defaultValue="">
+            <option value="" disabled>Select Institution</option>
+            <option value="AKTU">AKTU</option>
+            <option value="University">University</option>
+          </select>
+        </div>
+        <div className="input-group">
+          <label htmlFor={`${prefix}year`} className="input-label">College Year</label>
+          <select id={`${prefix}year`} name={`${prefix}year`} className="input-field" required defaultValue="">
+            <option value="" disabled>Select Year</option>
+            <option value="1st Year">1st Year</option>
+            <option value="2nd Year">2nd Year</option>
+            <option value="3rd Year">3rd Year</option>
+            <option value="4th Year">4th Year</option>
+          </select>
+        </div>
+        <div className="input-group">
+          <label htmlFor={`${prefix}branch`} className="input-label">Branch</label>
+          <select id={`${prefix}branch`} name={`${prefix}branch`} className="input-field" required defaultValue="">
+            <option value="" disabled>Select Branch</option>
+            <option value="CSE - core">CSE - Core</option>
+            <option value="CSE - AIML">CSE - AIML</option>
+            <option value="CSE - DS">CSE - DS</option>
+            <option value="IT">IT</option>
+            <option value="OTHER">Other</option>
+          </select>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ── Main Register Page ──────────────────────────────────────── */
+export default function Register() {
   const [loadingToken, setLoadingToken] = useState(true);
-  const [registrationData, setRegistrationData] = useState<RegistrationData | null>(null);
+  const [registration, setRegistration] = useState<RegistrationData | null>(null);
   const [isPending, startTransition] = useTransition();
+  const [memberCount, setMemberCount] = useState(1);
+  const [errorMessage, setErrorMessage] = useState('');
+  const [fieldErrors, setFieldErrors] = useState<Record<string, string[]>>({});
+  const pageRef = useRef<HTMLDivElement>(null);
 
-  // Form State
-  const [teamName, setTeamName] = useState('');
-  const [activeStep, setActiveStep] = useState(0); // 0 = Team & Leader, 1 = Member 2, 2 = Member 3
-  const [members, setMembers] = useState<MemberPayload[]>([
-    { name: '', email: '', phone: '', roll: '', institution: 'AKTU', year: '1st Year', branch: 'CSE - core' },
-  ]);
+  // Animate page on mount
+  useEffect(() => {
+    if (!pageRef.current) return;
+    gsap.fromTo(pageRef.current, { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.6, ease: 'power3.out' });
+  }, [loadingToken, registration]);
 
-  // Errors state
-  const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
-  const [serverError, setServerError] = useState<string>('');
-
-  // 1. Initial Load: Check if registration token exists in localStorage
+  // Token check
   useEffect(() => {
     try {
-      const storedToken = localStorage.getItem('registration_token');
-      if (storedToken) {
-        fetchRegistrationByToken(storedToken)
+      const token = localStorage.getItem('registration_token');
+      if (token) {
+        getRegistrationByToken(token)
           .then((res) => {
-            if (res.success && res.data) {
-              setRegistrationData(res.data);
-            } else {
-              localStorage.removeItem('registration_token');
-            }
+            if (res.success && res.registration) setRegistration(res.registration);
+            else localStorage.removeItem('registration_token');
           })
-          .catch(() => {
-            localStorage.removeItem('registration_token');
-          })
-          .finally(() => {
-            setLoadingToken(false);
-          });
+          .catch(console.error)
+          .finally(() => setLoadingToken(false));
       } else {
         setLoadingToken(false);
       }
@@ -223,722 +245,232 @@ export default function RegisterPage() {
     }
   }, []);
 
-  // Update member field
-  const updateMemberField = (index: number, field: keyof MemberPayload, value: string) => {
-    setMembers((prev) => {
-      const updated = [...prev];
-      updated[index] = { ...updated[index], [field]: value };
-      return updated;
-    });
-
-    // Clear field error as user types
-    const errorKey = `m${index}_${field}`;
-    if (fieldErrors[errorKey]) {
-      setFieldErrors((prev) => {
-        const next = { ...prev };
-        delete next[errorKey];
-        return next;
-      });
-    }
-  };
-
-  // Add Member
-  const addMember = () => {
-    if (members.length < 3) {
-      setMembers((prev) => [
-        ...prev,
-        { name: '', email: '', phone: '', roll: '', institution: 'AKTU', year: '1st Year', branch: 'CSE - core' },
-      ]);
-      setActiveStep(members.length);
-    }
-  };
-
-  // Remove Member
-  const removeMember = (indexToRemove: number) => {
-    if (members.length > 1) {
-      setMembers((prev) => prev.filter((_, idx) => idx !== indexToRemove));
-      if (activeStep >= members.length - 1) {
-        setActiveStep(Math.max(0, members.length - 2));
-      }
-    }
-  };
-
-  // Client-side validation per step & for whole form
-  const validateStep = (stepIndex: number): boolean => {
-    const errors: Record<string, string> = {};
-
-    if (stepIndex === 0) {
-      if (!teamName.trim()) {
-        errors.team_name = 'Team name is required';
-      }
-    }
-
-    const member = members[stepIndex];
-    if (member) {
-      const prefix = `m${stepIndex}_`;
-      if (!member.name.trim() || member.name.trim().length < 2) {
-        errors[`${prefix}name`] = 'Full name must be at least 2 characters';
-      }
-
-      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      if (!member.email.trim()) {
-        errors[`${prefix}email`] = 'Email address is required';
-      } else if (!emailRegex.test(member.email.trim())) {
-        errors[`${prefix}email`] = 'Please enter a valid email address';
-      }
-
-      const phoneRegex = /^[0-9]{10}$/;
-      if (!member.phone.trim()) {
-        errors[`${prefix}phone`] = 'Phone number is required';
-      } else if (!phoneRegex.test(member.phone.trim())) {
-        errors[`${prefix}phone`] = 'Must be exactly 10 digits (e.g. 9876543210)';
-      }
-
-      if (!member.roll.trim()) {
-        errors[`${prefix}roll`] = 'Roll number / Student ID is required';
-      }
-      if (!member.institution) {
-        errors[`${prefix}institution`] = 'Please select your institution';
-      }
-      if (!member.year) {
-        errors[`${prefix}year`] = 'Please select your college year';
-      }
-      if (!member.branch) {
-        errors[`${prefix}branch`] = 'Please select your branch';
-      }
-    }
-
-    // Check duplicate emails in the form
-    const emails = members.map((m) => m.email.trim().toLowerCase()).filter(Boolean);
-    const emailDuplicates = emails.filter((item, index) => emails.indexOf(item) !== index);
-    if (emailDuplicates.length > 0) {
-      members.forEach((m, idx) => {
-        if (emailDuplicates.includes(m.email.trim().toLowerCase())) {
-          errors[`m${idx}_email`] = 'Duplicate email: Each member must have a unique email';
-        }
-      });
-    }
-
-    setFieldErrors((prev) => ({ ...prev, ...errors }));
-    return Object.keys(errors).length === 0;
-  };
-
-  const validateAll = (): boolean => {
-    let isValid = true;
-    for (let i = 0; i < members.length; i++) {
-      if (!validateStep(i)) {
-        isValid = false;
-      }
-    }
-    return isValid;
-  };
-
-  // Handle Form Submission
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    setServerError('');
-
-    if (!validateAll()) {
-      setServerError('Please correct the highlighted errors before submitting.');
-      return;
-    }
-
-    startTransition(async () => {
-      const response = await submitRegistration({
-        team_name: teamName,
-        members: members,
-      });
-
-      if (response.success && response.data && response.data.token && response.data.members) {
-        // Save token to localStorage for instant access
-        try {
-          localStorage.setItem('registration_token', response.data.token);
-        } catch (err) {
-          console.warn('Storage warning:', err);
-        }
-
-        setRegistrationData({
-          team_name: response.data.team_name || teamName,
-          members: response.data.members,
-        });
-      } else {
-        setServerError(response.message || 'Registration failed. Please check your details.');
-        if (response.errors) {
-          // Map server-side errors
-          const mappedErrors: Record<string, string> = {};
-          if (response.errors.team_name) {
-            mappedErrors.team_name = response.errors.team_name[0];
-          }
-          setFieldErrors((prev) => ({ ...prev, ...mappedErrors }));
-        }
-      }
-    });
-  };
-
-  // Handle new registration / clear token
-  const handleRegisterAnother = () => {
-    localStorage.removeItem('registration_token');
-    setRegistrationData(null);
-    setTeamName('');
-    setMembers([{ name: '', email: '', phone: '', roll: '', institution: 'AKTU', year: '1st Year', branch: 'CSE - core' }]);
-    setActiveStep(0);
+  const handleFormSubmit = async (formData: FormData) => {
+    setErrorMessage('');
     setFieldErrors({});
-    setServerError('');
+    startTransition(async () => {
+      try {
+        const result = await registerAction(null, formData);
+        if (result.success && result.token && result.members) {
+          try { localStorage.setItem('registration_token', result.token); } catch {}
+          setRegistration({ team_name: result.team_name || 'Team', members: result.members });
+        } else {
+          setErrorMessage(result.message || 'Registration failed. Please check your details.');
+          if (result.errors) setFieldErrors(result.errors);
+        }
+      } catch {
+        setErrorMessage('An unexpected error occurred. Please try again.');
+      }
+    });
   };
 
-  // State 1: Checking localStorage
+  const bgGlow = {
+    position: 'absolute' as const,
+    top: '15%', left: '50%',
+    transform: 'translateX(-50%)',
+    width: '500px', height: '500px',
+    background: 'radial-gradient(circle, rgba(220,38,38,0.06) 0%, transparent 70%)',
+    pointerEvents: 'none' as const,
+  };
+
+  /* ── Loading state ── */
   if (loadingToken) {
     return (
-      <main style={{ minHeight: '70vh', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '2rem' }}>
-        <div style={{ textAlign: 'center' }}>
-          <div style={{
-            width: '40px',
-            height: '40px',
-            border: '3px solid var(--border-color)',
-            borderTopColor: 'var(--primary-red)',
-            borderRadius: '50%',
-          }} className="animate-spin" />
-          <p style={{ color: 'var(--text-muted)', fontWeight: 600, marginTop: '1rem' }}>Loading registration details...</p>
+      <div style={{
+        minHeight: '100vh',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        flexDirection: 'column',
+        gap: '1.5rem',
+      }}>
+        <div style={{ position: 'relative', animation: 'spin-slow 3s linear infinite' }}>
+          <Image src="/logo.png" alt="NCS" width={70} height={31} className="ncs-logo-img ncs-logo-light" style={{ opacity: 0.85 }} />
+          <Image src="/logo-white.png" alt="NCS" width={70} height={31} className="ncs-logo-img ncs-logo-dark" style={{ opacity: 0.85 }} />
         </div>
-      </main>
-    );
-  }
-
-  // State 2: Already registered (Token verified) -> Display QR Passes
-  if (registrationData) {
-    return (
-      <main style={{ padding: '3.5rem 1.5rem 5rem 1.5rem', maxWidth: '1100px', margin: '0 auto', width: '100%' }}>
-        <div className="animate-fade-in" style={{
-          backgroundColor: '#FFFFFF',
-          border: '1px solid var(--border-color)',
-          borderRadius: '20px',
-          boxShadow: 'var(--shadow-lg)',
-          padding: 'clamp(1.5rem, 4vw, 3rem)',
-        }}>
-          {/* Header Banner */}
-          <div style={{
-            textAlign: 'center',
-            marginBottom: '2.5rem',
-            paddingBottom: '2rem',
-            borderBottom: '1px solid var(--border-color)',
-          }}>
-            <div style={{
-              width: '64px',
-              height: '64px',
-              backgroundColor: 'var(--success-bg)',
-              color: 'var(--success)',
-              borderRadius: '50%',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              margin: '0 auto 1.25rem auto',
-              boxShadow: '0 4px 12px rgba(22, 163, 74, 0.2)',
-            }}>
-              <CheckCircle size={36} />
-            </div>
-
-            <div style={{
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: '0.4rem',
-              color: 'var(--primary-red)',
-              fontWeight: 800,
-              fontSize: '0.85rem',
-              textTransform: 'uppercase',
-              letterSpacing: '0.1em',
-              marginBottom: '0.5rem',
-            }}>
-              <Sparkles size={16} />
-              <span>Confirmed Registration</span>
-            </div>
-
-            <h1 style={{
-              fontSize: 'clamp(1.75rem, 4vw, 2.75rem)',
-              fontWeight: 800,
-              color: 'var(--black)',
-              letterSpacing: '-0.03em',
-              marginBottom: '0.5rem',
-            }}>
-              Team: <span className="text-red">{registrationData.team_name}</span>
-            </h1>
-
-            <p style={{ fontSize: '1rem', color: 'var(--text-muted)', maxWidth: '600px', margin: '0 auto', marginBottom: '1rem' }}>
-              Each team member must present their personal QR pass card below at the registration desk for venue check-in.
-            </p>
-            <div style={{
-              backgroundColor: 'var(--bg-subtle)',
-              border: '1px solid var(--border-color)',
-              borderRadius: '8px',
-              padding: '0.875rem 1rem',
-              maxWidth: '600px',
-              margin: '0 auto',
-              display: 'flex',
-              alignItems: 'flex-start',
-              gap: '0.75rem',
-              textAlign: 'left'
-            }}>
-              <AlertCircle size={18} style={{ color: 'var(--primary-red)', flexShrink: 0, marginTop: '2px' }} />
-              <span style={{ fontSize: '0.9rem', color: 'var(--black)', fontWeight: 600, lineHeight: 1.4 }}>
-                Important: Please take screenshots of the QR codes for all team members. These QR codes will be required at the venue.
-              </span>
-            </div>
-          </div>
-
-          {/* Member Passes Grid */}
-          <div style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
-            gap: '1.75rem',
-            marginBottom: '3rem',
-          }}>
-            {registrationData.members.map((member, idx) => (
-              <MemberPassCard key={idx} member={member} teamName={registrationData.team_name} />
-            ))}
-          </div>
-
-          {/* Action Bar */}
-          <div style={{
-            display: 'flex',
-            flexWrap: 'wrap',
-            alignItems: 'center',
-            justifyContent: 'center',
-            gap: '1rem',
-            paddingTop: '1.5rem',
-            borderTop: '1px solid var(--border-color)',
-          }}>
-            <Link href="/" className="btn btn-primary" style={{ minWidth: '180px' }}>
-              <ArrowLeft size={18} />
-              <span>Return Home</span>
-            </Link>
-          </div>
-        </div>
-      </main>
-    );
-  }
-
-  // State 3: Active Registration Form
-  return (
-    <main style={{ padding: '3rem 1.5rem 5rem 1.5rem', maxWidth: '820px', margin: '0 auto', width: '100%' }}>
-      
-      {/* Back to Home Link */}
-      <div style={{ marginBottom: '1.5rem' }}>
-        <Link 
-          href="/" 
-          style={{ 
-            display: 'inline-flex', 
-            alignItems: 'center', 
-            gap: '0.4rem', 
-            fontSize: '0.9rem', 
-            fontWeight: 700, 
-            color: 'var(--text-muted)',
-            transition: 'color 0.15s ease'
-          }}
-          onMouseEnter={(e) => (e.currentTarget.style.color = 'var(--primary-red)')}
-          onMouseLeave={(e) => (e.currentTarget.style.color = 'var(--text-muted)')}
-        >
-          <ArrowLeft size={16} />
-          <span>Back to Home</span>
-        </Link>
+        <p style={{ fontFamily: 'var(--font-mono)', fontSize: '0.72rem', color: 'var(--muted)', letterSpacing: '0.12em' }}>
+          CHECKING REGISTRATION STATUS...
+        </p>
       </div>
+    );
+  }
 
-      <div className="form-card animate-fade-in">
-        
-        {/* Card Header */}
+  /* ── Already registered — QR Pass view ── */
+  if (registration) {
+    return (
+      <div ref={pageRef} style={{
+        minHeight: '100vh',
+        padding: '7rem 1.5rem 4rem',
+        maxWidth: '900px',
+        margin: '0 auto',
+        position: 'relative',
+        opacity: 0,
+      }}>
+        <div style={bgGlow} />
+
+        {/* Header */}
         <div style={{ textAlign: 'center', marginBottom: '2.5rem' }}>
-          <div style={{
-            display: 'inline-flex',
-            alignItems: 'center',
-            gap: '0.4rem',
-            color: 'var(--primary-red)',
-            fontWeight: 800,
-            fontSize: '0.8rem',
-            textTransform: 'uppercase',
-            letterSpacing: '0.12em',
-            marginBottom: '0.4rem',
-          }}>
-            <span>HOW TO HACKATHON</span>
+          <div style={{ display: 'inline-block', margin: '0 auto 1.25rem' }}>
+            <Image src="/logo.png" alt="NCS" width={90} height={40} className="ncs-logo-img ncs-logo-light" />
+            <Image src="/logo-white.png" alt="NCS" width={90} height={40} className="ncs-logo-img ncs-logo-dark" />
           </div>
-
-          <h1 style={{
-            fontSize: 'clamp(1.75rem, 3.5vw, 2.5rem)',
-            fontWeight: 800,
-            color: 'var(--black)',
-            letterSpacing: '-0.03em',
-            marginBottom: '0.5rem',
-          }}>
-            Team <span className="text-red">Registration</span>
+          <span className="badge badge-primary" style={{ marginBottom: '0.875rem', display: 'inline-flex', alignItems: 'center', gap: '0.4rem' }}>
+            <Sparkles size={14} />
+            <span>Registration Confirmed</span>
+          </span>
+          <h1 style={{ fontSize: 'clamp(1.75rem, 5vw, 2.75rem)', marginBottom: '0.5rem' }}>
+            Team: <span className="gradient-text">{registration.team_name}</span>
           </h1>
-
-          <p style={{ fontSize: '0.95rem', color: 'var(--text-muted)' }}>
-            Register your team (1 to 3 members). Complete all required details for verification.
+          <p style={{ color: 'var(--muted-fg)', fontSize: '0.95rem' }}>
+            Present these QR codes at the venue to verify your registration.
           </p>
         </div>
 
-        {/* Global Server Error Alert */}
-        {serverError && (
-          <div style={{
-            backgroundColor: 'var(--error-bg)',
-            border: '1px solid #FECACA',
-            borderRadius: '8px',
+        {/* QR cards grid */}
+        <div style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))',
+          gap: '1.25rem',
+          marginBottom: '2.5rem',
+        }}>
+          {registration.members.map((member, i) => (
+            <MemberQRCodeCard key={i} member={member} index={i} />
+          ))}
+        </div>
+
+        <div style={{ textAlign: 'center' }}>
+          <Link href="/" className="btn btn-primary" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem' }}>
+            <ArrowLeft size={16} />
+            Return Home
+          </Link>
+        </div>
+      </div>
+    );
+  }
+
+  /* ── Registration form ── */
+  return (
+    <div ref={pageRef} style={{
+      minHeight: '100vh',
+      padding: '7rem 1.5rem 4rem',
+      maxWidth: '780px',
+      margin: '0 auto',
+      position: 'relative',
+      opacity: 0,
+    }}>
+      <div style={bgGlow} />
+
+      {/* Page header */}
+      <div style={{ textAlign: 'center', marginBottom: '2.5rem' }}>
+        <div style={{ display: 'inline-block', margin: '0 auto 1.25rem', animation: 'float-logo 5s ease-in-out infinite' }}>
+          <Image src="/logo.png" alt="NCS" width={90} height={40} className="ncs-logo-img ncs-logo-light" />
+          <Image src="/logo-white.png" alt="NCS" width={90} height={40} className="ncs-logo-img ncs-logo-dark" />
+        </div>
+        <span className="badge badge-primary" style={{ marginBottom: '0.875rem' }}>How to Hackathon.</span>
+        <h1 style={{ fontSize: 'clamp(1.75rem, 5vw, 2.5rem)', marginBottom: '0.5rem' }}>
+          Join the <span className="gradient-text">Challenge</span>
+        </h1>
+        <p style={{ color: 'var(--muted-fg)', fontSize: '0.95rem' }}>
+          Fill in your team details below — 1 to 3 members
+        </p>
+      </div>
+
+      {/* Form */}
+      <form action={handleFormSubmit}>
+        <input type="hidden" name="member_count" value={memberCount} />
+
+        {/* Team name */}
+        <div className="glass" style={{ padding: '1.75rem', borderRadius: 'var(--radius-lg)', marginBottom: '1.5rem' }}>
+          <div className="input-group" style={{ marginBottom: 0 }}>
+            <label htmlFor="team_name" className="input-label">Team Name</label>
+            <input
+              type="text"
+              id="team_name"
+              name="team_name"
+              className="input-field"
+              style={{ fontSize: '1.1rem', padding: '0.9rem 1rem' }}
+              placeholder="Code Ninjas"
+              required
+            />
+            {fieldErrors.team_name && <p className="error-text">{fieldErrors.team_name[0]}</p>}
+          </div>
+        </div>
+
+        {/* Member fields */}
+        {Array.from({ length: memberCount }, (_, i) => (
+          <MemberFields key={i} index={i} />
+        ))}
+
+        {/* Add / Remove member */}
+        <div style={{ display: 'flex', gap: '0.75rem', marginBottom: '1.5rem', flexWrap: 'wrap' }}>
+          {memberCount < 3 && (
+            <button
+              type="button"
+              className="btn btn-ghost"
+              style={{ flex: 1, minWidth: '160px', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: '0.4rem' }}
+              onClick={() => setMemberCount((m) => m + 1)}
+            >
+              <Plus size={16} />
+              Add Team Member
+            </button>
+          )}
+          {memberCount > 1 && (
+            <button
+              type="button"
+              className="btn"
+              style={{ flex: 1, minWidth: '160px', background: 'rgba(239,68,68,0.1)', color: 'var(--error)', border: '1px solid rgba(239,68,68,0.3)', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: '0.4rem' }}
+              onClick={() => setMemberCount((m) => m - 1)}
+            >
+              <Minus size={16} />
+              Remove Member
+            </button>
+          )}
+        </div>
+
+        {/* Error */}
+        {errorMessage && (
+          <div className="glass" style={{
             padding: '1rem 1.25rem',
-            marginBottom: '2rem',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '0.75rem',
-            color: 'var(--primary-red)',
-          }} role="alert">
-            <AlertCircle size={20} style={{ flexShrink: 0 }} />
-            <span style={{ fontSize: '0.9rem', fontWeight: 600 }}>{serverError}</span>
+            borderRadius: 'var(--radius-md)',
+            borderColor: 'rgba(239,68,68,0.4)',
+            background: 'rgba(239,68,68,0.07)',
+            marginBottom: '1.25rem',
+          }}>
+            <p style={{ color: 'var(--error)', fontSize: '0.9rem', textAlign: 'center', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.4rem' }}>
+              <AlertTriangle size={16} />
+              <span>{errorMessage}</span>
+            </p>
           </div>
         )}
 
-        <form onSubmit={handleSubmit} noValidate>
-          
-          {/* Section 1: Team Name */}
-          <div style={{
-            backgroundColor: 'var(--bg-subtle)',
-            border: '1px solid var(--border-color)',
-            borderRadius: '12px',
-            padding: '1.5rem',
-            marginBottom: '2rem',
-          }}>
-            <FormField
-              id="team_name"
-              name="team_name"
-              label="Team Name"
-              placeholder="e.g. Code Ninjas"
-              value={teamName}
-              required
-              error={fieldErrors.team_name}
-              onChange={(e) => {
-                setTeamName(e.target.value);
-                if (fieldErrors.team_name) {
-                  setFieldErrors((prev) => {
-                    const next = { ...prev };
-                    delete next.team_name;
-                    return next;
-                  });
-                }
-              }}
-              helperText="Choose a distinctive name for your hackathon squad"
-            />
-          </div>
+        {/* Submit */}
+        <button
+          type="submit"
+          className="btn btn-primary"
+          style={{ width: '100%', padding: '1rem', fontSize: '1rem', letterSpacing: '0.03em', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem' }}
+          disabled={isPending}
+        >
+          {isPending ? (
+            <span style={{ display: 'flex', alignItems: 'center', gap: '0.625rem' }}>
+              <Loader2 size={18} className="animate-spin-slow" />
+              Registering…
+            </span>
+          ) : (
+            <>
+              <Rocket size={18} />
+              Complete Registration
+            </>
+          )}
+        </button>
+      </form>
 
-          {/* Section 2: Member Step Selector Tabs */}
-          <div style={{ marginBottom: '1.5rem' }}>
-            <div style={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-              marginBottom: '0.75rem',
-              flexWrap: 'wrap',
-              gap: '0.5rem',
-            }}>
-              <span style={{ fontSize: '0.9rem', fontWeight: 700, color: 'var(--black)' }}>
-                Team Members ({members.length}/3)
-              </span>
-
-              {members.length < 3 && (
-                <button
-                  type="button"
-                  onClick={addMember}
-                  style={{
-                    display: 'inline-flex',
-                    alignItems: 'center',
-                    gap: '0.35rem',
-                    backgroundColor: 'transparent',
-                    border: '1px solid var(--primary-red)',
-                    color: 'var(--primary-red)',
-                    padding: '0.35rem 0.85rem',
-                    borderRadius: '6px',
-                    fontSize: '0.825rem',
-                    fontWeight: 700,
-                    cursor: 'pointer',
-                  }}
-                >
-                  <Plus size={14} />
-                  <span>Add Member ({members.length + 1})</span>
-                </button>
-              )}
-            </div>
-
-            {/* Stepper Tabs */}
-            <div style={{
-              display: 'grid',
-              gridTemplateColumns: `repeat(${members.length}, 1fr)`,
-              gap: '0.5rem',
-              backgroundColor: 'var(--bg-subtle)',
-              padding: '0.4rem',
-              borderRadius: '10px',
-              border: '1px solid var(--border-color)',
-            }}>
-              {members.map((_, idx) => {
-                const isActive = activeStep === idx;
-                const isLeader = idx === 0;
-                return (
-                  <button
-                    key={idx}
-                    type="button"
-                    onClick={() => setActiveStep(idx)}
-                    style={{
-                      padding: '0.65rem 0.5rem',
-                      borderRadius: '6px',
-                      border: 'none',
-                      backgroundColor: isActive ? 'var(--white)' : 'transparent',
-                      color: isActive ? 'var(--primary-red)' : 'var(--text-muted)',
-                      boxShadow: isActive ? 'var(--shadow-sm)' : 'none',
-                      fontWeight: isActive ? 800 : 600,
-                      fontSize: '0.85rem',
-                      cursor: 'pointer',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      gap: '0.35rem',
-                      transition: 'all 0.15s ease',
-                    }}
-                  >
-                    {isLeader ? <UserCheck size={16} /> : <Users size={16} />}
-                    <span>{isLeader ? 'Leader (M1)' : `Member ${idx + 1}`}</span>
-                  </button>
-                );
-              })}
-            </div>
-          </div>
-
-          {/* Section 3: Active Member Details Form */}
-          {members.map((member, idx) => {
-            if (idx !== activeStep) return null;
-            const isLeader = idx === 0;
-            const prefix = `m${idx}_`;
-
-            return (
-              <div
-                key={idx}
-                className="animate-fade-in"
-                style={{
-                  backgroundColor: '#FFFFFF',
-                  border: '1px solid var(--border-color)',
-                  borderRadius: '12px',
-                  padding: '1.75rem',
-                  marginBottom: '2rem',
-                  boxShadow: 'var(--shadow-sm)',
-                }}
-              >
-                <div style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'space-between',
-                  marginBottom: '1.5rem',
-                  paddingBottom: '0.75rem',
-                  borderBottom: '1px solid var(--border-color)',
-                }}>
-                  <div>
-                    <h3 style={{ fontSize: '1.15rem', fontWeight: 800, color: 'var(--black)' }}>
-                      {isLeader ? 'Team Leader Details' : `Member ${idx + 1} Details`}
-                    </h3>
-                    <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>
-                      {isLeader ? 'Primary contact for team announcements' : 'Team participant details'}
-                    </p>
-                  </div>
-
-                  {!isLeader && (
-                    <button
-                      type="button"
-                      onClick={() => removeMember(idx)}
-                      style={{
-                        display: 'inline-flex',
-                        alignItems: 'center',
-                        gap: '0.35rem',
-                        backgroundColor: 'transparent',
-                        border: 'none',
-                        color: 'var(--primary-red)',
-                        fontSize: '0.8rem',
-                        fontWeight: 700,
-                        cursor: 'pointer',
-                        padding: '0.4rem',
-                      }}
-                    >
-                      <Trash2 size={16} />
-                      <span>Remove</span>
-                    </button>
-                  )}
-                </div>
-
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '0.5rem' }}>
-                  
-                  {/* Full Name */}
-                  <FormField
-                    id={`${prefix}name`}
-                    name={`${prefix}name`}
-                    label="Full Name"
-                    placeholder="e.g. Alex Johnson"
-                    value={member.name}
-                    required
-                    error={fieldErrors[`${prefix}name`]}
-                    onChange={(e) => updateMemberField(idx, 'name', e.target.value)}
-                  />
-
-                  {/* Email & Phone grid */}
-                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '1rem' }}>
-                    <FormField
-                      id={`${prefix}email`}
-                      name={`${prefix}email`}
-                      type="email"
-                      label="Email Address"
-                      placeholder="alex@university.edu"
-                      value={member.email}
-                      required
-                      error={fieldErrors[`${prefix}email`]}
-                      onChange={(e) => updateMemberField(idx, 'email', e.target.value)}
-                      helperText="Must be unique across registrations"
-                    />
-
-                    <FormField
-                      id={`${prefix}phone`}
-                      name={`${prefix}phone`}
-                      type="tel"
-                      label="Phone Number"
-                      placeholder="10-digit Mobile Number"
-                      maxLength={10}
-                      value={member.phone}
-                      required
-                      error={fieldErrors[`${prefix}phone`]}
-                      onChange={(e) => updateMemberField(idx, 'phone', e.target.value.replace(/\D/g, ''))}
-                    />
-                  </div>
-
-                  {/* Roll Number & Institution */}
-                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '1rem' }}>
-                    <FormField
-                      id={`${prefix}roll`}
-                      name={`${prefix}roll`}
-                      label="Roll Number / Student ID"
-                      placeholder="e.g. 23005201..."
-                      value={member.roll}
-                      required
-                      error={fieldErrors[`${prefix}roll`]}
-                      onChange={(e) => updateMemberField(idx, 'roll', e.target.value)}
-                    />
-
-                    <FormField
-                      id={`${prefix}institution`}
-                      name={`${prefix}institution`}
-                      type="select"
-                      label="Institution"
-                      value={member.institution}
-                      options={INSTITUTION_OPTIONS}
-                      required
-                      error={fieldErrors[`${prefix}institution`]}
-                      onChange={(e) => updateMemberField(idx, 'institution', e.target.value)}
-                    />
-                  </div>
-
-                  {/* College Year & Branch */}
-                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '1rem' }}>
-                    <FormField
-                      id={`${prefix}year`}
-                      name={`${prefix}year`}
-                      type="select"
-                      label="College Year"
-                      value={member.year}
-                      options={YEAR_OPTIONS}
-                      required
-                      error={fieldErrors[`${prefix}year`]}
-                      onChange={(e) => updateMemberField(idx, 'year', e.target.value)}
-                    />
-
-                    <FormField
-                      id={`${prefix}branch`}
-                      name={`${prefix}branch`}
-                      type="select"
-                      label="Branch / Major"
-                      value={member.branch}
-                      options={BRANCH_OPTIONS}
-                      required
-                      error={fieldErrors[`${prefix}branch`]}
-                      onChange={(e) => updateMemberField(idx, 'branch', e.target.value)}
-                    />
-                  </div>
-
-                </div>
-
-                {/* Step navigation buttons inside the card */}
-                <div style={{
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                  alignItems: 'center',
-                  marginTop: '1.5rem',
-                  paddingTop: '1rem',
-                  borderTop: '1px solid var(--border-color)',
-                }}>
-                  {activeStep > 0 ? (
-                    <button
-                      type="button"
-                      onClick={() => setActiveStep(activeStep - 1)}
-                      className="btn btn-secondary"
-                      style={{ padding: '0.5rem 1.25rem', fontSize: '0.875rem' }}
-                    >
-                      <ArrowLeft size={16} />
-                      <span>Previous Member</span>
-                    </button>
-                  ) : <div />}
-
-                  {activeStep < members.length - 1 ? (
-                    <button
-                      type="button"
-                      onClick={() => {
-                        if (validateStep(activeStep)) {
-                          setActiveStep(activeStep + 1);
-                        }
-                      }}
-                      className="btn btn-secondary"
-                      style={{ padding: '0.5rem 1.25rem', fontSize: '0.875rem' }}
-                    >
-                      <span>Next Member</span>
-                      <ArrowRight size={16} />
-                    </button>
-                  ) : <div />}
-                </div>
-              </div>
-            );
-          })}
-
-          {/* Submit Button */}
-          <div style={{ marginTop: '2rem' }}>
-            <button
-              type="submit"
-              disabled={isPending}
-              className="btn btn-primary"
-              style={{
-                width: '100%',
-                padding: '1rem',
-                fontSize: '1.05rem',
-                fontWeight: 800,
-              }}
-            >
-              {isPending ? (
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', justifyContent: 'center' }}>
-                  <div style={{
-                    width: '18px',
-                    height: '18px',
-                    border: '2px solid #FFFFFF',
-                    borderTopColor: 'transparent',
-                    borderRadius: '50%',
-                  }} className="animate-spin" />
-                  <span>Securing Registration...</span>
-                </div>
-              ) : (
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', justifyContent: 'center' }}>
-                  <span>Complete Team Registration</span>
-                  <ArrowRight size={18} />
-                </div>
-              )}
-            </button>
-          </div>
-
-        </form>
-
+      {/* Footer brand */}
+      <div style={{ textAlign: 'center', marginTop: '2.5rem', opacity: 0.7 }}>
+        <div style={{ display: 'inline-block' }}>
+          <Image src="/logo.png" alt="NCS" width={70} height={31} className="ncs-logo-img ncs-logo-light" />
+          <Image src="/logo-white.png" alt="NCS" width={70} height={31} className="ncs-logo-img ncs-logo-dark" />
+        </div>
       </div>
-    </main>
+    </div>
   );
 }
