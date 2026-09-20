@@ -462,9 +462,26 @@ export default function RegisterPage() {
               Team: <span className="text-red">{registrationData.team_name}</span>
             </h1>
 
-            <p style={{ fontSize: '1rem', color: 'var(--text-muted)', maxWidth: '600px', margin: '0 auto' }}>
+            <p style={{ fontSize: '1rem', color: 'var(--text-muted)', maxWidth: '600px', margin: '0 auto', marginBottom: '1rem' }}>
               Each team member must present their personal QR pass card below at the registration desk for venue check-in.
             </p>
+            <div style={{
+              backgroundColor: 'var(--bg-subtle)',
+              border: '1px solid var(--border-color)',
+              borderRadius: '8px',
+              padding: '0.875rem 1rem',
+              maxWidth: '600px',
+              margin: '0 auto',
+              display: 'flex',
+              alignItems: 'flex-start',
+              gap: '0.75rem',
+              textAlign: 'left'
+            }}>
+              <AlertCircle size={18} style={{ color: 'var(--primary-red)', flexShrink: 0, marginTop: '2px' }} />
+              <span style={{ fontSize: '0.9rem', color: 'var(--black)', fontWeight: 600, lineHeight: 1.4 }}>
+                Important: Please take screenshots of the QR codes for all team members. These QR codes will be required at the venue.
+              </span>
+            </div>
           </div>
 
           {/* Member Passes Grid */}
@@ -493,14 +510,6 @@ export default function RegisterPage() {
               <ArrowLeft size={18} />
               <span>Return Home</span>
             </Link>
-
-            <button
-              type="button"
-              onClick={handleRegisterAnother}
-              className="btn btn-secondary"
-            >
-              <span>Register Another Team</span>
-            </button>
           </div>
         </div>
       </main>
