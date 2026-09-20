@@ -65,6 +65,21 @@ export default function Navbar() {
           gap: '2rem',
         }}>
           <Link 
+            href="https://hackncs.in/" 
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{ 
+              fontSize: '0.925rem', 
+              fontWeight: 600, 
+              color: 'var(--text-muted)',
+              transition: 'color 0.15s ease'
+            }}
+            onMouseEnter={(e) => (e.currentTarget.style.color = 'var(--black)')}
+            onMouseLeave={(e) => (e.currentTarget.style.color = 'var(--text-muted)')}
+          >
+            NCS Website
+          </Link>
+          <Link 
             href="/#about" 
             style={{ 
               fontSize: '0.925rem', 
@@ -135,6 +150,20 @@ export default function Navbar() {
           gap: '1rem',
           boxShadow: 'var(--shadow-md)',
         }}>
+          <Link 
+            href="https://hackncs.in/" 
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={() => setMobileMenuOpen(false)}
+            style={{ 
+              fontSize: '1rem', 
+              fontWeight: 600, 
+              color: 'var(--black)',
+              padding: '0.5rem 0'
+            }}
+          >
+            NCS Website
+          </Link>
           <Link 
             href="/#about" 
             onClick={() => setMobileMenuOpen(false)}
