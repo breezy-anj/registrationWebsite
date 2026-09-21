@@ -770,3 +770,123 @@ h1, h2, h3, h4 {
     clip-path: inset(0 0 0 0);
   }
 }
+
+/* ─── FIFA CARDS & EVENT LAYOUT ─────────────────────────────────────────────── */
+
+/* Modern FIFA / Ultimate Team card wrapper without borders */
+.fifa-card-wrapper {
+  position: relative;
+  border-radius: 1.35rem;
+  background: transparent;
+  transition: transform 0.28s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.28s ease;
+  cursor: pointer;
+}
+.fifa-card-wrapper:hover {
+  transform: translateY(-8px) scale(1.015);
+}
+[data-theme="dark"] .fifa-card-wrapper {
+  background: transparent;
+}
+[data-theme="dark"] .fifa-card-wrapper:hover {
+  transform: translateY(-8px) scale(1.015);
+}
+
+.fifa-card {
+  position: relative;
+  background: var(--card-bg);
+  border-radius: 1.25rem;
+  padding: 2rem 1.75rem;
+  overflow: hidden;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.06), 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+[data-theme="dark"] .fifa-card {
+  box-shadow: 0 14px 40px rgba(0, 0, 0, 0.5), 0 0 24px rgba(239, 68, 68, 0.15);
+}
+.fifa-card-wrapper:hover .fifa-card {
+  box-shadow: 0 24px 60px rgba(239, 68, 68, 0.30), 0 8px 28px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(239, 68, 68, 0.25);
+}
+
+/* Holographic dynamic sheen */
+.fifa-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    115deg,
+    transparent 35%,
+    rgba(255, 255, 255, 0.35) 48%,
+    rgba(255, 215, 0, 0.15) 52%,
+    transparent 65%
+  );
+  pointer-events: none;
+  opacity: 0.25;
+  transition: opacity 0.3s ease;
+}
+.fifa-card-wrapper:hover .fifa-card::before {
+  opacity: 0.8;
+}
+
+/* FIFA card rating pill */
+.fifa-rating-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  background: linear-gradient(135deg, var(--primary) 0%, #991b1b 100%);
+  color: #ffffff;
+  padding: 0.22rem 0.65rem;
+  border-radius: 0.5rem;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  box-shadow: 0 2px 8px var(--primary-glow);
+}
+
+/* FIFA card bottom stats */
+.fifa-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.45rem;
+  margin-top: auto;
+  padding-top: 1.25rem;
+  border-top: 1px dashed var(--border);
+}
+.fifa-stat-item {
+  text-align: center;
+  padding: 0.4rem 0.25rem;
+  background: var(--secondary);
+  border-radius: var(--radius-sm);
+}
+.fifa-stat-value {
+  font-family: var(--font-mono);
+  font-size: 0.88rem;
+  font-weight: 800;
+  color: var(--primary);
+  line-height: 1.1;
+}
+.fifa-stat-label {
+  font-size: 0.62rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--muted-fg);
+  margin-top: 2px;
+}
+
+.event-layout-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 3rem;
+  align-items: start;
+}
+@media (min-width: 992px) {
+  .event-layout-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+  }
+}

@@ -30,7 +30,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={fontSans.variable}>
+    <html lang="en" className={fontSans.variable} data-theme="dark">
       <body>
         <Navbar />
         {children}

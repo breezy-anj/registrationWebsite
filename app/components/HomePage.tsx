@@ -18,6 +18,7 @@ import {
   ChevronDown,
   Sparkles,
   Globe,
+  Laptop,
 } from 'lucide-react';
 
 gsap.registerPlugin(ScrollTrigger);
@@ -652,178 +653,152 @@ export default function HomePage() {
               What is <span style={{ color: 'var(--primary)' }}>How to</span> Hackathon<span style={{ color: 'var(--primary)' }}>!!</span>?
             </h2>
             <div className="section-divider" />
-            <p style={{ color: 'var(--muted-fg)', maxWidth: '620px', margin: '1.25rem auto 0', lineHeight: 1.8 }}>
-              Inspired by the comprehensive vision of larger events, this session aims to introduce participants to hackathons —
-              from ideation to execution, mentored every step of the way.
+            <p style={{ color: 'var(--muted-fg)', maxWidth: '720px', margin: '1.25rem auto 0', lineHeight: 1.8 }}>
+              The &quot;How to Hackathon !!&quot; event is designed to introduce participants to the dynamics of tech competitions. Inspired by the comprehensive vision of larger events, this session aims to unite creative thinkers and aspiring technologists. A core component of the event is the mini idea challenge, structured to foster collaboration and learning.
             </p>
           </div>
 
-          <div ref={cardsRef} style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(310px, 1fr))', gap: '1.75rem' }}>
-            {/* FIFA Card 1 — Lightning Talks */}
-            <div className="fifa-card-wrapper" data-tilt>
-              <div className="fifa-card">
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.25rem' }}>
-                  <div style={{
-                    width: '46px', height: '46px',
-                    borderRadius: '12px',
-                    background: 'var(--primary-dim)',
-                    display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  }}>
-                    <Zap size={26} style={{ color: 'var(--primary)' }} />
-                  </div>
-                  <span className="fifa-rating-badge">TALKS</span>
-                </div>
-
-                <h3 style={{ fontSize: '1.3rem', fontWeight: 800, marginBottom: '0.65rem', color: 'var(--foreground)' }}>
-                  Lightning Talks
+          <div className="event-layout-grid" id="event-flow">
+            {/* LEFT COLUMN: TIMELINE */}
+            <div>
+              <div style={{ textAlign: 'left', marginBottom: '2.5rem' }}>
+                <span className="badge badge-accent" style={{ marginBottom: '1rem' }}>Timeline</span>
+                <h3 style={{ fontSize: '1.8rem', fontWeight: 800 }}>
+                  Event <span style={{ color: 'var(--primary)' }}>Flow</span>
                 </h3>
-                <p style={{ color: 'var(--muted-fg)', lineHeight: 1.65, fontSize: '0.92rem', marginBottom: '1rem' }}>
-                  Get the president's address, an event preview, and fast-paced insights on hackathon dynamics, modern tech trends, and career networking.
-                </p>
+              </div>
+              
+              <div style={{ position: 'relative', paddingLeft: '1.5rem' }}>
+                {/* Vertical Line */}
+                <div style={{
+                  position: 'absolute',
+                  left: '1.5rem',
+                  top: '2rem',
+                  bottom: '2rem',
+                  width: '2px',
+                  background: 'linear-gradient(180deg, rgba(239, 68, 68, 0) 0%, var(--primary) 15%, var(--primary) 85%, rgba(239, 68, 68, 0) 100%)',
+                  transform: 'translateX(-50%)',
+                  opacity: 0.5,
+                }} />
 
-                {/* FIFA Stats Grid */}
-                <div className="fifa-stats-grid">
-                  <div className="fifa-stat-item">
-                    <div className="fifa-stat-value">98</div>
-                    <div className="fifa-stat-label">Talks</div>
+                {[
+                  { time: '~30m', label: 'Intro', desc: "Preview of the event with the president's address." },
+                  { time: 'TBD', label: 'Main Session', desc: 'An engaging session about hackathons, contests, networking, and modern tech trends.' },
+                  { time: '1 Hr', label: 'Ideation', desc: 'Participants are given a theme or problem and will come up with the best possible software solutions. Mentoring will be provided.' },
+                  { time: 'End', label: 'Submission', desc: 'Participants will submit their ideas along with the proposed solution through the chat link they used for research.' },
+                  { time: '~30m', label: 'Judging', desc: 'A speaker session about how participants should have approached the problems and real hackathons, followed by result declaration. Future events and recruitments will also be promoted.' },
+                ].map((item, i) => (
+                  <div key={i} data-tilt className="glass" style={{
+                    position: 'relative',
+                    marginLeft: '2rem',
+                    marginBottom: '1.5rem',
+                    padding: '1.5rem',
+                    borderRadius: 'var(--radius-lg)',
+                  }}>
+                    {/* Timeline Dot */}
+                    <div style={{
+                      position: 'absolute',
+                      left: '-2rem',
+                      top: '50%',
+                      width: '14px',
+                      height: '14px',
+                      borderRadius: '50%',
+                      background: 'var(--background)',
+                      border: '3px solid var(--primary)',
+                      boxShadow: '0 0 12px var(--primary-glow)',
+                      transform: 'translate(-50%, -50%)',
+                      zIndex: 2,
+                    }} />
+                    
+                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '1rem', alignItems: 'center', justifyContent: 'space-between' }}>
+                      <div>
+                        <h3 style={{ fontSize: '1.25rem', fontWeight: 800, color: 'var(--foreground)', marginBottom: '0.25rem' }}>
+                          {item.label}
+                        </h3>
+                        <p style={{ color: 'var(--muted-fg)', fontSize: '0.92rem' }}>
+                          {item.desc}
+                        </p>
+                      </div>
+                    </div>
                   </div>
-                  <div className="fifa-stat-item">
-                    <div className="fifa-stat-value">96</div>
-                    <div className="fifa-stat-label">Ideas</div>
-                  </div>
-                  <div className="fifa-stat-item">
-                    <div className="fifa-stat-value">99</div>
-                    <div className="fifa-stat-label">Network</div>
-                  </div>
-                </div>
-
-                <div className="hud-corner hud-corner-tl" /><div className="hud-corner hud-corner-tr" />
-                <div className="hud-corner hud-corner-bl" /><div className="hud-corner hud-corner-br" />
+                ))}
               </div>
             </div>
 
-            {/* FIFA Card 2 — Event Flow */}
-            <div className="fifa-card-wrapper" data-tilt>
-              <div className="fifa-card">
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.25rem' }}>
-                  <div style={{
-                    width: '46px', height: '46px',
-                    borderRadius: '12px',
-                    background: 'var(--accent-dim)',
-                    display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  }}>
-                    <Calendar size={26} style={{ color: 'var(--primary)' }} />
-                  </div>
-                  <span className="fifa-rating-badge" style={{ background: 'linear-gradient(135deg, #18181b 0%, #3f3f46 100%)' }}>FLOW</span>
-                </div>
-
-                <h3 style={{ fontSize: '1.3rem', fontWeight: 800, marginBottom: '0.85rem', color: 'var(--foreground)' }}>
-                  Event Flow
+            {/* RIGHT COLUMN: CARDS STACK */}
+            <div>
+              <div style={{ textAlign: 'left', marginBottom: '2.5rem' }}>
+                <span className="badge badge-accent" style={{ marginBottom: '1rem' }}>Highlights</span>
+                <h3 style={{ fontSize: '1.8rem', fontWeight: 800 }}>
+                  Event <span style={{ color: 'var(--primary)' }}>Details</span>
                 </h3>
-
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.65rem' }}>
-                  {[
-                    { time: '~30m', label: 'Intro', desc: "Address & preview" },
-                    { time: 'Core', label: 'Main Session', desc: 'Trends & dynamics' },
-                    { time: '1 Hr', label: 'Mini Challenge', desc: 'Ideation sprint' },
-                    { time: '~30m', label: 'Judging', desc: 'Prizes & wrap-up' },
-                  ].map((item, i) => (
-                    <div key={i} style={{ display: 'flex', gap: '0.75rem', alignItems: 'center' }}>
-                      <span style={{
-                        fontFamily: 'var(--font-mono)',
-                        fontSize: '0.62rem',
-                        color: 'var(--primary)',
-                        background: 'var(--primary-dim)',
-                        padding: '0.2rem 0.45rem',
-                        borderRadius: '4px',
-                        fontWeight: 700,
-                        whiteSpace: 'nowrap',
-                      }}>
-                        {item.time}
-                      </span>
-                      <div style={{ display: 'flex', gap: '0.4rem', alignItems: 'baseline' }}>
-                        <span style={{ fontSize: '0.82rem', fontWeight: 700, color: 'var(--foreground)' }}>{item.label}:</span>
-                        <span style={{ fontSize: '0.76rem', color: 'var(--muted-fg)' }}>{item.desc}</span>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-
-                {/* FIFA Stats Grid */}
-                <div className="fifa-stats-grid">
-                  <div className="fifa-stat-item">
-                    <div className="fifa-stat-value">30M</div>
-                    <div className="fifa-stat-label">Intro</div>
-                  </div>
-                  <div className="fifa-stat-item">
-                    <div className="fifa-stat-value">60M</div>
-                    <div className="fifa-stat-label">Sprint</div>
-                  </div>
-                  <div className="fifa-stat-item">
-                    <div className="fifa-stat-value">30M</div>
-                    <div className="fifa-stat-label">Judge</div>
-                  </div>
-                </div>
-
-                <div className="hud-corner hud-corner-tl" /><div className="hud-corner hud-corner-tr" />
-                <div className="hud-corner hud-corner-bl" /><div className="hud-corner hud-corner-br" />
               </div>
-            </div>
+              <div ref={cardsRef} style={{ display: 'flex', flexDirection: 'column', gap: '1.75rem' }}>
+                {/* FIFA Card 1 — Lightning Talks */}
+                <div className="fifa-card-wrapper" data-tilt>
+                  <div className="fifa-card">
 
-            {/* FIFA Card 3 — Event Details */}
-            <div className="fifa-card-wrapper" data-tilt>
-              <div className="fifa-card">
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.25rem' }}>
-                  <div style={{
-                    width: '46px', height: '46px',
-                    borderRadius: '12px',
-                    background: 'var(--primary-dim)',
-                    display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  }}>
-                    <Trophy size={26} style={{ color: 'var(--primary)' }} />
+
+                    <h3 style={{ fontSize: '1.3rem', fontWeight: 800, marginBottom: '0.65rem', color: 'var(--foreground)' }}>
+                      Sessions & Talks
+                    </h3>
+                    <p style={{ color: 'var(--muted-fg)', lineHeight: 1.65, fontSize: '0.92rem', marginBottom: '1rem' }}>
+                      Starts with a 30 min preview and the president's address on why NCS is a good fit. Then, two NCS leads will deliver an engaging main session on hackathons, contests, networking, and modern tech trends.
+                    </p>
+
+                    <div className="hud-corner hud-corner-tl" /><div className="hud-corner hud-corner-tr" />
+                    <div className="hud-corner hud-corner-bl" /><div className="hud-corner hud-corner-br" />
                   </div>
-                  <span className="fifa-rating-badge">DETAILS</span>
                 </div>
 
-                <h3 style={{ fontSize: '1.3rem', fontWeight: 800, marginBottom: '0.85rem', color: 'var(--foreground)' }}>
-                  Event Details
-                </h3>
+                {/* FIFA Card 3 — Event Details */}
+                <div className="fifa-card-wrapper" data-tilt>
+                  <div className="fifa-card">
 
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.65rem' }}>
-                  {[
-                    { label: 'Team Size', value: '1 to 3 members', icon: <Users size={16} style={{ color: 'var(--foreground)' }} /> },
-                    { label: 'Pre-requisites', value: 'None — open to all!', icon: <CheckCircle2 size={16} style={{ color: 'var(--emerald)' }} /> },
-                    { label: 'Tools Allowed', value: 'AI tools encouraged!', icon: <Bot size={16} style={{ color: 'var(--primary)' }} /> },
-                    { label: 'Prizes', value: 'Exclusive goodies & swag', icon: <Gift size={16} style={{ color: '#f59e0b' }} /> },
-                  ].map((item, i) => (
-                    <div key={i} style={{ display: 'flex', gap: '0.65rem', alignItems: 'center' }}>
-                      <span style={{ flexShrink: 0 }}>{item.icon}</span>
-                      <div style={{ display: 'flex', gap: '0.4rem', alignItems: 'baseline' }}>
-                        <span style={{ fontSize: '0.78rem', color: 'var(--muted-fg)', fontWeight: 600 }}>{item.label}:</span>
-                        <span style={{ fontSize: '0.82rem', color: 'var(--foreground)', fontWeight: 700 }}>{item.value}</span>
-                      </div>
+
+                    <h3 style={{ fontSize: '1.3rem', fontWeight: 800, marginBottom: '0.85rem', color: 'var(--foreground)' }}>
+                      Event Details
+                    </h3>
+
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.65rem' }}>
+                      {[
+                        { label: 'Requirement', value: 'Bring own laptop & extension cord', icon: <Laptop size={16} style={{ color: 'var(--primary)' }} /> },
+                        { label: 'Team Size', value: '1 to 3 members', icon: <Users size={16} style={{ color: 'var(--foreground)' }} /> },
+                        { label: 'Tools', value: 'AI tools encouraged!', icon: <Bot size={16} style={{ color: 'var(--primary)' }} /> },
+                        { label: 'Prizes', value: 'Best ideas get goodies', icon: <Gift size={16} style={{ color: '#f59e0b' }} /> },
+                      ].map((item, i) => (
+                        <div key={i} style={{ display: 'flex', gap: '0.65rem', alignItems: 'center' }}>
+                          <span style={{ flexShrink: 0 }}>{item.icon}</span>
+                          <div style={{ display: 'flex', gap: '0.4rem', alignItems: 'baseline' }}>
+                            <span style={{ fontSize: '0.78rem', color: 'var(--muted-fg)', fontWeight: 600 }}>{item.label}:</span>
+                            <span style={{ fontSize: '0.82rem', color: 'var(--foreground)', fontWeight: 700 }}>{item.value}</span>
+                          </div>
+                        </div>
+                      ))}
                     </div>
-                  ))}
-                </div>
 
-                {/* FIFA Stats Grid */}
-                <div className="fifa-stats-grid">
-                  <div className="fifa-stat-item">
-                    <div className="fifa-stat-value">1-3</div>
-                    <div className="fifa-stat-label">Squad</div>
-                  </div>
-                  <div className="fifa-stat-item">
-                    <div className="fifa-stat-value">100</div>
-                    <div className="fifa-stat-label">AI OK</div>
-                  </div>
-                  <div className="fifa-stat-item">
-                    <div className="fifa-stat-value">99</div>
-                    <div className="fifa-stat-label">Prizes</div>
+                    <div className="hud-corner hud-corner-tl" /><div className="hud-corner hud-corner-tr" />
+                    <div className="hud-corner hud-corner-bl" /><div className="hud-corner hud-corner-br" />
                   </div>
                 </div>
 
-                <div className="hud-corner hud-corner-tl" /><div className="hud-corner hud-corner-tr" />
-                <div className="hud-corner hud-corner-bl" /><div className="hud-corner hud-corner-br" />
+                {/* FIFA Card 4 — Judgment Criteria */}
+                <div className="fifa-card-wrapper" data-tilt>
+                  <div className="fifa-card">
+
+
+                    <h3 style={{ fontSize: '1.3rem', fontWeight: 800, marginBottom: '0.85rem', color: 'var(--foreground)' }}>
+                      Judgment Criteria
+                    </h3>
+                    
+                    <p style={{ color: 'var(--muted-fg)', lineHeight: 1.65, fontSize: '0.92rem', marginBottom: '1rem' }}>
+                      Submissions are evaluated on the quality of proposed software solutions during a 30-minute judging phase. The conclusive session offers insights into real hackathons, followed by result declaration, prize distribution, and promotion of future events and recruitments.
+                    </p>
+
+                    <div className="hud-corner hud-corner-tl" /><div className="hud-corner hud-corner-tr" />
+                    <div className="hud-corner hud-corner-bl" /><div className="hud-corner hud-corner-br" />
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -832,7 +807,7 @@ export default function HomePage() {
         {/* ── NCS IDENTITY SECTION ──────────────────────────────── */}
         <section
           ref={logoSectionRef}
-          id="event-flow"
+          id="ncs-identity"
           style={{
             padding: '5rem 2rem',
             textAlign: 'center',
