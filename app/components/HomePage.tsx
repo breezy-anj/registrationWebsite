@@ -654,7 +654,7 @@ export default function HomePage() {
             </h2>
             <div className="section-divider" />
             <p style={{ color: 'var(--muted-fg)', maxWidth: '720px', margin: '1.25rem auto 0', lineHeight: 1.8 }}>
-              The &quot;How to Hackathon !!&quot; event is designed to introduce participants to the dynamics of tech competitions. Inspired by the comprehensive vision of larger events, this session aims to unite creative thinkers and aspiring technologists. A core component of the event is the mini idea challenge, structured to foster collaboration and learning.
+              Designed to bridge the gap between curiosity and execution, &quot;How to Hackathon !!&quot; equips you with the tools to navigate tech competitions with confidence. You&apos;ll gain key insights into modern software trends, work directly with 3rd-year mentors during a live ideation challenge, and learn how to position your ideas for real-world hackathons.
             </p>
           </div>
 
@@ -682,11 +682,12 @@ export default function HomePage() {
                 }} />
 
                 {[
-                  { time: '~30m', label: 'Intro', desc: "Preview of the event with the president's address." },
-                  { time: 'TBD', label: 'Main Session', desc: 'An engaging session about hackathons, contests, networking, and modern tech trends.' },
-                  { time: '1 Hr', label: 'Ideation', desc: 'Participants are given a theme or problem and will come up with the best possible software solutions. Mentoring will be provided.' },
-                  { time: 'End', label: 'Submission', desc: 'Participants will submit their ideas along with the proposed solution through the chat link they used for research.' },
-                  { time: '~30m', label: 'Judging', desc: 'A speaker session about how participants should have approached the problems and real hackathons, followed by result declaration. Future events and recruitments will also be promoted.' },
+                  { time: '10:00 am', duration: '30 min', label: 'Introduction', desc: 'Preview of the event and opening overview.' },
+                  { time: '10:30 am', duration: 'TBD', label: 'Main Session', desc: 'Two leads from NCS will deliver an engaging session about hackathons, contests, networking, and modern tech trends.' },
+                  { time: '12:00 pm', duration: '1 hour', label: 'Mini Idea Challenge (Ideation)', desc: 'Participants are given a theme or problem and will come up with the best possible software solutions. Mentoring will be provided by a group of assigned 3rd-year students.' },
+                  { time: '1:00 pm', duration: 'End of Ideation', label: 'Submission', desc: 'Participants will submit their ideas along with the proposed solution through the chat link they used for research.' },
+                  { time: '2:00 pm', duration: '~1 hour', label: 'Judging & Conclusive Session', desc: 'A speaker session about how participants should have approached the problems and real hackathons, followed by result declaration. Future events and recruitments will also be promoted.' },
+                  { time: '2:45 pm', duration: '~15 min', label: 'Prize Distribution', desc: 'Distribution of exclusive prizes and perks to the winners, followed by a brief acknowledgement and closing of the event.' },
                 ].map((item, i) => (
                   <div key={i} data-tilt className="glass" style={{
                     position: 'relative',
@@ -711,11 +712,16 @@ export default function HomePage() {
                     }} />
                     
                     <div style={{ display: 'flex', flexWrap: 'wrap', gap: '1rem', alignItems: 'center', justifyContent: 'space-between' }}>
-                      <div>
-                        <h3 style={{ fontSize: '1.25rem', fontWeight: 800, color: 'var(--foreground)', marginBottom: '0.25rem' }}>
-                          {item.label}
-                        </h3>
-                        <p style={{ color: 'var(--muted-fg)', fontSize: '0.92rem' }}>
+                      <div style={{ flex: 1 }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '0.35rem', flexWrap: 'wrap' }}>
+                          <h3 style={{ fontSize: '1.25rem', fontWeight: 800, color: 'var(--foreground)', margin: 0 }}>
+                            {item.label}
+                          </h3>
+                          <span style={{ fontSize: '0.75rem', fontWeight: 700, padding: '0.2rem 0.6rem', background: 'rgba(239, 68, 68, 0.1)', color: 'var(--primary)', borderRadius: '4px', border: '1px solid rgba(239, 68, 68, 0.2)' }}>
+                            {item.time} ({item.duration})
+                          </span>
+                        </div>
+                        <p style={{ color: 'var(--muted-fg)', fontSize: '0.92rem', margin: 0 }}>
                           {item.desc}
                         </p>
                       </div>
@@ -734,16 +740,23 @@ export default function HomePage() {
                 </h3>
               </div>
               <div ref={cardsRef} style={{ display: 'flex', flexDirection: 'column', gap: '1.75rem' }}>
-                {/* FIFA Card 1 — Lightning Talks */}
+                {/* FIFA Card 1 — Why to participate */}
                 <div className="fifa-card-wrapper" data-tilt>
                   <div className="fifa-card">
 
-
-                    <h3 style={{ fontSize: '1.3rem', fontWeight: 800, marginBottom: '0.65rem', color: 'var(--foreground)' }}>
-                      Sessions & Talks
+                    <h3 style={{ fontSize: '1.3rem', fontWeight: 800, marginBottom: '0.85rem', color: 'var(--foreground)' }}>
+                      Why to participate
                     </h3>
-                    <p style={{ color: 'var(--muted-fg)', lineHeight: 1.65, fontSize: '0.92rem', marginBottom: '1rem' }}>
-                      Starts with a 30 min preview and the president's address on why NCS is a good fit. Then, two NCS leads will deliver an engaging main session on hackathons, contests, networking, and modern tech trends.
+                    
+                    <ul style={{ color: 'var(--muted-fg)', lineHeight: 1.5, fontSize: '0.88rem', marginBottom: '1rem', paddingLeft: '1.25rem', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                      <li><strong style={{ color: 'var(--foreground)' }}>Hackathon Insight:</strong> Understand how to approach hackathons and real-world problem statements.</li>
+                      <li><strong style={{ color: 'var(--foreground)' }}>Hands-on Experience:</strong> Take part in a Mini Idea Challenge and work on your own solution.</li>
+                      <li><strong style={{ color: 'var(--foreground)' }}>Senior Mentorship:</strong> Get mentorship and insights from experienced student mentors.</li>
+                      <li><strong style={{ color: 'var(--foreground)' }}>Interactive Learning:</strong> Learn about hackathons, contests, networking and current tech trends.</li>
+                    </ul>
+                    
+                    <p style={{ color: 'var(--primary)', fontWeight: 700, fontSize: '0.92rem', marginTop: 'auto' }}>
+                      Exclusive perks: Get a chance to win exclusive prizes and perks for the best ideas.
                     </p>
 
                     <div className="hud-corner hud-corner-tl" /><div className="hud-corner hud-corner-tr" />
@@ -751,49 +764,67 @@ export default function HomePage() {
                   </div>
                 </div>
 
-                {/* FIFA Card 3 — Event Details */}
+                {/* FIFA Card 2 — Details and Venue */}
                 <div className="fifa-card-wrapper" data-tilt>
                   <div className="fifa-card">
 
-
                     <h3 style={{ fontSize: '1.3rem', fontWeight: 800, marginBottom: '0.85rem', color: 'var(--foreground)' }}>
-                      Event Details
+                      Details and Venue
                     </h3>
 
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '0.65rem' }}>
                       {[
-                        { label: 'Requirement', value: 'Bring own laptop & extension cord', icon: <Laptop size={16} style={{ color: 'var(--primary)' }} /> },
-                        { label: 'Team Size', value: '1 to 3 members', icon: <Users size={16} style={{ color: 'var(--foreground)' }} /> },
-                        { label: 'Tools', value: 'AI tools encouraged!', icon: <Bot size={16} style={{ color: 'var(--primary)' }} /> },
-                        { label: 'Prizes', value: 'Best ideas get goodies', icon: <Gift size={16} style={{ color: '#f59e0b' }} /> },
+                        { label: 'Date', value: '29 September 2026 (Tuesday)', icon: <Calendar size={16} style={{ color: 'var(--primary)' }} /> },
+                        { label: 'Time', value: '10:00 am - 3:00pm', icon: <Zap size={16} style={{ color: 'var(--foreground)' }} /> },
+                        { label: 'Venue', value: 'TBD', icon: <Globe size={16} style={{ color: 'var(--primary)' }} /> },
+                        { label: 'Last date for Registration', value: 'TBD', icon: <Rocket size={16} style={{ color: 'var(--foreground)' }} /> },
                       ].map((item, i) => (
                         <div key={i} style={{ display: 'flex', gap: '0.65rem', alignItems: 'center' }}>
                           <span style={{ flexShrink: 0 }}>{item.icon}</span>
-                          <div style={{ display: 'flex', gap: '0.4rem', alignItems: 'baseline' }}>
+                          <div style={{ display: 'flex', gap: '0.4rem', alignItems: 'baseline', flexWrap: 'wrap' }}>
                             <span style={{ fontSize: '0.78rem', color: 'var(--muted-fg)', fontWeight: 600 }}>{item.label}:</span>
                             <span style={{ fontSize: '0.82rem', color: 'var(--foreground)', fontWeight: 700 }}>{item.value}</span>
                           </div>
                         </div>
                       ))}
                     </div>
+                    
+                    <p style={{ color: 'var(--muted-fg)', marginTop: '1rem', fontSize: '0.85rem', lineHeight: 1.5 }}>
+                      Bring your laptops, chargers and extension boards. (Atleast one per team)
+                    </p>
 
                     <div className="hud-corner hud-corner-tl" /><div className="hud-corner hud-corner-tr" />
                     <div className="hud-corner hud-corner-bl" /><div className="hud-corner hud-corner-br" />
                   </div>
                 </div>
 
-                {/* FIFA Card 4 — Judgment Criteria */}
+                {/* FIFA Card 3 — Participation Eligibility */}
                 <div className="fifa-card-wrapper" data-tilt>
                   <div className="fifa-card">
 
-
                     <h3 style={{ fontSize: '1.3rem', fontWeight: 800, marginBottom: '0.85rem', color: 'var(--foreground)' }}>
-                      Judgment Criteria
+                      Participation Eligibility
                     </h3>
                     
-                    <p style={{ color: 'var(--muted-fg)', lineHeight: 1.65, fontSize: '0.92rem', marginBottom: '1rem' }}>
-                      Submissions are evaluated on the quality of proposed software solutions during a 30-minute judging phase. The conclusive session offers insights into real hackathons, followed by result declaration, prize distribution, and promotion of future events and recruitments.
+                    <p style={{ color: 'var(--muted-fg)', lineHeight: 1.5, fontSize: '0.92rem', marginBottom: '1rem' }}>
+                      Open to 1st and 2nd year B.Tech students of JSSATEN and JSS University.
                     </p>
+
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.65rem' }}>
+                      {[
+                        { label: 'Team Size', value: '1 to 3 members', icon: <Users size={16} style={{ color: 'var(--primary)' }} /> },
+                        { label: 'Pre-requisites', value: 'None', icon: <CheckCircle2 size={16} style={{ color: 'var(--foreground)' }} /> },
+                        { label: 'Tools', value: 'AI tools are encouraged', icon: <Bot size={16} style={{ color: 'var(--primary)' }} /> },
+                      ].map((item, i) => (
+                        <div key={i} style={{ display: 'flex', gap: '0.65rem', alignItems: 'center' }}>
+                          <span style={{ flexShrink: 0 }}>{item.icon}</span>
+                          <div style={{ display: 'flex', gap: '0.4rem', alignItems: 'baseline', flexWrap: 'wrap' }}>
+                            <span style={{ fontSize: '0.78rem', color: 'var(--muted-fg)', fontWeight: 600 }}>{item.label}:</span>
+                            <span style={{ fontSize: '0.82rem', color: 'var(--foreground)', fontWeight: 700 }}>{item.value}</span>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
 
                     <div className="hud-corner hud-corner-tl" /><div className="hud-corner hud-corner-tr" />
                     <div className="hud-corner hud-corner-bl" /><div className="hud-corner hud-corner-br" />
@@ -884,6 +915,85 @@ export default function HomePage() {
           </Link>
         </section>
 
+        {/* ── FAQ SECTION ─────────────────────────────────────────── */}
+        <section
+          id="faq"
+          style={{
+            padding: '5rem 2rem',
+            maxWidth: '850px',
+            margin: '0 auto',
+          }}
+        >
+          <div style={{ textAlign: 'center', marginBottom: '3.5rem' }}>
+            <span className="badge badge-accent" style={{ marginBottom: '1rem' }}>Got Questions?</span>
+            <h2 style={{ fontSize: 'clamp(1.75rem, 4vw, 2.75rem)', marginBottom: '0.75rem' }}>
+              Frequently Asked <span style={{ color: 'var(--primary)' }}>Questions</span>
+            </h2>
+          </div>
+
+          <style>{`
+            .faq-details summary::-webkit-details-marker { display: none; }
+            .faq-details[open] .faq-chevron { transform: rotate(180deg); }
+            .faq-chevron { transition: transform 0.3s ease; }
+            .faq-details { transition: background 0.3s ease, border-color 0.3s ease; }
+            .faq-details:hover { border-color: rgba(239, 68, 68, 0.4); background: rgba(12, 12, 20, 0.6); }
+          `}</style>
+
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+            {[
+              {
+                q: "Q1: Who is eligible to participate?",
+                a: "The event is exclusively open to all 1st and 2nd-year B.Tech students at JSSATEN and JSS University."
+              },
+              {
+                q: "Q2: How big can my team be?",
+                a: "You can participate solo or form a team of up to 3 members."
+              },
+              {
+                q: "Q3: Do I need prior coding or hackathon experience to join?",
+                a: "Not at all! There are absolutely no prerequisites. You will learn the basics of tech competitions from scratch and receive direct guidance from 3rd-year mentors during the activities."
+              },
+              {
+                q: "Q4: Are AI tools allowed during the Mini Idea Challenge?",
+                a: "Yes, the use of AI tools is explicitly encouraged to help you research and build your solution."
+              },
+              {
+                q: "Q5: Will there be any prizes for the Mini Idea Challenge?",
+                a: "Yes! The teams that come up with the best software solutions and problem-solving approaches during the ideation sprint will win exclusive prizes and perks."
+              }
+            ].map((faq, i) => (
+              <details
+                key={i}
+                className="glass faq-details"
+                style={{
+                  borderRadius: 'var(--radius-lg)',
+                  border: '1px solid var(--border)',
+                }}
+              >
+                <summary
+                  style={{
+                    padding: '1.25rem 1.5rem',
+                    fontWeight: 700,
+                    fontSize: '1.05rem',
+                    cursor: 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    listStyle: 'none',
+                    color: 'var(--foreground)',
+                  }}
+                >
+                  {faq.q}
+                  <ChevronDown size={20} className="faq-chevron" style={{ color: 'var(--primary)', flexShrink: 0, marginLeft: '1rem' }} />
+                </summary>
+                <div style={{ padding: '0 1.5rem 1.25rem', color: 'var(--muted-fg)', lineHeight: 1.6, fontSize: '0.95rem' }}>
+                  {faq.a}
+                </div>
+              </details>
+            ))}
+          </div>
+        </section>
+
         {/* ── REDESIGNED MODERN TECH FOOTER ─────────────────────── */}
         <footer className="footer-modern">
           <div style={{ maxWidth: '1100px', margin: '0 auto', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '2rem' }}>
@@ -921,6 +1031,17 @@ export default function HomePage() {
               >
                 <Globe size={18} />
                 <span>www.hackncs.in/</span>
+              </a>
+              <a
+                href="https://chat.whatsapp.com/KVDVRMIUXU2HIFckjGgmQL?s=cl&p=a&mlu=4&ilr=4"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="footer-social-pill"
+              >
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 0 0-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z"/>
+                </svg>
+                <span>WhatsApp Community</span>
               </a>
             </div>
 
