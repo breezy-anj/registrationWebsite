@@ -13,10 +13,6 @@ export const metadata: Metadata = {
   title: "How to Hackathon!! — Nibble Computer Society",
   description:
     "Register for How to Hackathon!! — presented by NCS. Unite with creative thinkers, learn hackathon dynamics, and compete for glory.",
-  icons: {
-    icon: "/logo.png",
-    apple: "/logo.png",
-  },
   openGraph: {
     title: "How to Hackathon!! — NCS",
     description: "Register now for the How to Hackathon!! event by Nibble Computer Society.",
