@@ -682,12 +682,12 @@ export default function HomePage() {
                 }} />
 
                 {[
-                  { time: '10:00 am', duration: '30 min', label: 'Introduction', desc: 'Preview of the event and opening overview.' },
-                  { time: '10:30 am', duration: 'TBD', label: 'Main Session', desc: 'Two leads from NCS will deliver an engaging session about hackathons, contests, networking, and modern tech trends.' },
-                  { time: '12:00 pm', duration: '1 hour', label: 'Mini Idea Challenge (Ideation)', desc: 'Participants are given a theme or problem and will come up with the best possible software solutions. Mentoring will be provided by a group of assigned 3rd-year students.' },
-                  { time: '1:00 pm', duration: 'End of Ideation', label: 'Submission', desc: 'Participants will submit their ideas along with the proposed solution through the chat link they used for research.' },
-                  { time: '2:00 pm', duration: '~1 hour', label: 'Judging & Conclusive Session', desc: 'A speaker session about how participants should have approached the problems and real hackathons, followed by result declaration. Future events and recruitments will also be promoted.' },
-                  { time: '2:45 pm', duration: '~15 min', label: 'Prize Distribution', desc: 'Distribution of exclusive prizes and perks to the winners, followed by a brief acknowledgement and closing of the event.' },
+                  { label: 'Introduction', desc: 'Preview of the event and opening overview.' },
+                  { label: 'Main Session', desc: 'Two leads from NCS will deliver an engaging session about hackathons, contests, networking, and modern tech trends.' },
+                  { label: 'Mini Idea Challenge (Ideation)', desc: 'Participants are given a theme or problem and will come up with the best possible software solutions. Mentoring will be provided by a group of assigned 3rd-year students.' },
+                  { label: 'Submission', desc: 'Participants will submit their ideas along with the proposed solution through the chat link they used for research.' },
+                  { label: 'Judging & Conclusive Session', desc: 'A speaker session about how participants should have approached the problems and real hackathons, followed by result declaration. Future events and recruitments will also be promoted.' },
+                  { label: 'Prize Distribution', desc: 'Distribution of exclusive prizes and perks to the winners, followed by a brief acknowledgement and closing of the event.' },
                 ].map((item, i) => (
                   <div key={i} data-tilt className="glass" style={{
                     position: 'relative',
@@ -717,9 +717,6 @@ export default function HomePage() {
                           <h3 style={{ fontSize: '1.25rem', fontWeight: 800, color: 'var(--foreground)', margin: 0 }}>
                             {item.label}
                           </h3>
-                          <span style={{ fontSize: '0.75rem', fontWeight: 700, padding: '0.2rem 0.6rem', background: 'rgba(239, 68, 68, 0.1)', color: 'var(--primary)', borderRadius: '4px', border: '1px solid rgba(239, 68, 68, 0.2)' }}>
-                            {item.time} ({item.duration})
-                          </span>
                         </div>
                         <p style={{ color: 'var(--muted-fg)', fontSize: '0.92rem', margin: 0 }}>
                           {item.desc}
@@ -775,9 +772,9 @@ export default function HomePage() {
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '0.65rem' }}>
                       {[
                         { label: 'Date', value: '29 September 2026 (Tuesday)', icon: <Calendar size={16} style={{ color: 'var(--primary)' }} /> },
-                        { label: 'Time', value: '10:00 am - 3:00pm', icon: <Zap size={16} style={{ color: 'var(--foreground)' }} /> },
-                        { label: 'Venue', value: 'TBD', icon: <Globe size={16} style={{ color: 'var(--primary)' }} /> },
-                        { label: 'Last date for Registration', value: 'TBD', icon: <Rocket size={16} style={{ color: 'var(--foreground)' }} /> },
+                        { label: 'Time', value: '01:00 PM – 05:00 PM', icon: <Zap size={16} style={{ color: 'var(--foreground)' }} /> },
+                        { label: 'Venue', value: 'Room-213, AB-III', icon: <Globe size={16} style={{ color: 'var(--primary)' }} /> },
+                        { label: 'Last date for Registration', value: '28 September 2026', icon: <Rocket size={16} style={{ color: 'var(--foreground)' }} /> },
                       ].map((item, i) => (
                         <div key={i} style={{ display: 'flex', gap: '0.65rem', alignItems: 'center' }}>
                           <span style={{ flexShrink: 0 }}>{item.icon}</span>
