@@ -32,7 +32,7 @@ async function runTests() {
   invalidPhoneFormData.append('m0_phone', '12345'); // invalid: not 10 digits
   invalidPhoneFormData.append('m0_roll', 'CS101');
   invalidPhoneFormData.append('m0_institution', 'Tech University');
-  invalidPhoneFormData.append('m0_year', '3rd');
+  invalidPhoneFormData.append('m0_year', '2nd Year');
   invalidPhoneFormData.append('m0_branch', 'CSE');
   
   const res2 = await registerAction(null, invalidPhoneFormData);
@@ -55,7 +55,7 @@ async function runTests() {
   dupEmailFormData.append('m0_phone', '9876543210');
   dupEmailFormData.append('m0_roll', 'CS101');
   dupEmailFormData.append('m0_institution', 'Tech University');
-  dupEmailFormData.append('m0_year', '3rd');
+  dupEmailFormData.append('m0_year', '2nd Year');
   dupEmailFormData.append('m0_branch', 'CSE');
 
   dupEmailFormData.append('m1_name', 'Bob');
@@ -63,7 +63,7 @@ async function runTests() {
   dupEmailFormData.append('m1_phone', '9876543211');
   dupEmailFormData.append('m1_roll', 'CS102');
   dupEmailFormData.append('m1_institution', 'Tech University');
-  dupEmailFormData.append('m1_year', '3rd');
+  dupEmailFormData.append('m1_year', '2nd Year');
   dupEmailFormData.append('m1_branch', 'IT');
 
   const res3 = await registerAction(null, dupEmailFormData);
@@ -98,7 +98,7 @@ async function runTests() {
   validFormData.append('m0_phone', '9876543210');
   validFormData.append('m0_roll', '2023CS001');
   validFormData.append('m0_institution', 'National Institute of Technology');
-  validFormData.append('m0_year', '3rd');
+  validFormData.append('m0_year', '2nd Year');
   validFormData.append('m0_branch', 'Computer Science');
 
   const res5 = await registerAction(null, validFormData);
