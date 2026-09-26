@@ -31,7 +31,7 @@ async function runTests() {
   invalidPhoneFormData.append('m0_email', 'aryan@example.com');
   invalidPhoneFormData.append('m0_phone', '12345'); // invalid: not 10 digits
   invalidPhoneFormData.append('m0_roll', 'CS101');
-  invalidPhoneFormData.append('m0_institution', 'Tech University');
+  invalidPhoneFormData.append('m0_institution', 'University');
   invalidPhoneFormData.append('m0_year', '1st Year');
   invalidPhoneFormData.append('m0_branch', 'CSE');
   
@@ -54,7 +54,7 @@ async function runTests() {
   dupEmailFormData.append('m0_email', 'same@example.com');
   dupEmailFormData.append('m0_phone', '9876543210');
   dupEmailFormData.append('m0_roll', 'CS101');
-  dupEmailFormData.append('m0_institution', 'Tech University');
+  dupEmailFormData.append('m0_institution', 'University');
   dupEmailFormData.append('m0_year', '1st Year');
   dupEmailFormData.append('m0_branch', 'CSE');
 
@@ -62,7 +62,7 @@ async function runTests() {
   dupEmailFormData.append('m1_email', 'same@example.com'); // duplicate!
   dupEmailFormData.append('m1_phone', '9876543211');
   dupEmailFormData.append('m1_roll', 'CS102');
-  dupEmailFormData.append('m1_institution', 'Tech University');
+  dupEmailFormData.append('m1_institution', 'University');
   dupEmailFormData.append('m1_year', '1st Year');
   dupEmailFormData.append('m1_branch', 'IT');
 
@@ -97,7 +97,7 @@ async function runTests() {
   validFormData.append('m0_email', 'aryan.valid@test.edu');
   validFormData.append('m0_phone', '9876543210');
   validFormData.append('m0_roll', '2023CS001');
-  validFormData.append('m0_institution', 'National Institute of Technology');
+  validFormData.append('m0_institution', 'University');
   validFormData.append('m0_year', '1st Year');
   validFormData.append('m0_branch', 'Computer Science');
 

@@ -175,14 +175,7 @@ function MemberFields({ index }: { index: number }) {
           <label htmlFor={`${prefix}roll`} className="input-label">Roll Number</label>
           <input type="text" id={`${prefix}roll`} name={`${prefix}roll`} className="input-field" placeholder="2003... / 230..." required />
         </div>
-        <div className="input-group">
-          <label htmlFor={`${prefix}institution`} className="input-label">Institution</label>
-          <select id={`${prefix}institution`} name={`${prefix}institution`} className="input-field" required defaultValue="">
-            <option value="" disabled>Select Institution</option>
-            <option value="AKTU">AKTU</option>
-            <option value="University">University</option>
-          </select>
-        </div>
+        <input type="hidden" name={`${prefix}institution`} value="University" />
         <div className="input-group">
           <label htmlFor={`${prefix}year`} className="input-label">College Year</label>
           <select id={`${prefix}year`} name={`${prefix}year`} className="input-field" required defaultValue="">
