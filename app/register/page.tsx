@@ -178,10 +178,7 @@ function MemberFields({ index }: { index: number }) {
         <input type="hidden" name={`${prefix}institution`} value="University" />
         <div className="input-group">
           <label htmlFor={`${prefix}year`} className="input-label">College Year</label>
-          <select id={`${prefix}year`} name={`${prefix}year`} className="input-field" required defaultValue="">
-            <option value="" disabled>Select Year</option>
-            <option value="1st Year">1st Year</option>
-          </select>
+          <input type="text" id={`${prefix}year`} name={`${prefix}year`} className="input-field" value="1st Year" readOnly required />
         </div>
         <div className="input-group">
           <label htmlFor={`${prefix}branch`} className="input-label">Branch</label>
