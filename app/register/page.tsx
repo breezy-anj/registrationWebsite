@@ -188,7 +188,6 @@ function MemberFields({ index }: { index: number }) {
           <select id={`${prefix}year`} name={`${prefix}year`} className="input-field" required defaultValue="">
             <option value="" disabled>Select Year</option>
             <option value="1st Year">1st Year</option>
-            <option value="2nd Year">2nd Year</option>
           </select>
         </div>
         <div className="input-group">
