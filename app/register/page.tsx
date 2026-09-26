@@ -347,14 +347,35 @@ export default function Register() {
       <div style={{ textAlign: 'center', marginBottom: '2.5rem' }}>
 
         <h1 style={{ fontSize: 'clamp(1.75rem, 5vw, 2.5rem)', marginBottom: '0.5rem' }}>
-          Join the <span className="gradient-text">Challenge</span>
+          Registrations <span className="gradient-text">Closed</span>
         </h1>
-        <p style={{ color: 'var(--muted-fg)', fontSize: '0.95rem' }}>
-          Fill in your team details below — 1 to 3 members
+        <p style={{ color: 'var(--muted-fg)', fontSize: '1.05rem', marginTop: '1rem', marginBottom: '2rem' }}>
+          Registrations have been closed for now. Please join our WhatsApp community for further updates.
         </p>
+        <a 
+          href="https://chat.whatsapp.com/CHqnglNK0x0L8UgMBPPL9o"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="btn"
+          style={{ 
+            display: 'inline-flex', 
+            alignItems: 'center', 
+            gap: '0.6rem', 
+            padding: '0.8rem 1.5rem', 
+            fontSize: '1rem',
+            backgroundColor: '#25D366',
+            color: '#ffffff',
+            borderColor: '#25D366',
+            boxShadow: '0 0 15px rgba(37, 211, 102, 0.4)'
+          }}
+        >
+          <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg>
+          Join WhatsApp Community
+        </a>
       </div>
 
-      {/* Form */}
+      {/* Form (Hidden as registrations are closed) */}
+      {false && (
       <form action={handleFormSubmit}>
         <input type="hidden" name="member_count" value={memberCount} />
 
@@ -442,6 +463,7 @@ export default function Register() {
           )}
         </button>
       </form>
+      )}
 
       {/* Footer brand */}
       <div style={{ textAlign: 'center', marginTop: '2.5rem', opacity: 0.7 }}>
